@@ -1,0 +1,15 @@
+@use '@angular/material' as mat;
+
+:root {
+  .mf-hl-tailwind-scope {
+    &.mat-mdc-tooltip {
+      white-space: pre-line; // Allow line breaks in tooltip text
+    }
+    @include mat.tooltip-overrides(
+      (
+        supporting-text-line-height: 18px,
+        supporting-text-size: 13px
+      )
+    );
+  }
+}

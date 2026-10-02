@@ -1,0 +1,37 @@
+mf-hl-root,
+.mf-hl-tailwind-scope {
+  .hl-search-input {
+    .mat-mdc-text-field-wrapper {
+      @apply tw-rounded-full tw-bg-gray-50 dark:tw-bg-[#505050] tw-border tw-border-gray-300 dark:tw-border-[#505050] tw-transition tw-duration-150;
+    }
+
+    &:hover .mat-mdc-text-field-wrapper {
+      @apply tw-border-primary;
+    }
+
+    &:focus-within .mat-mdc-text-field-wrapper {
+      @apply tw-border-primary tw-ring-2 tw-ring-primary/20;
+    }
+
+    .mat-mdc-form-field-flex {
+      @apply tw-items-center;
+    }
+
+    .mat-mdc-form-field-infix {
+      @apply tw-min-h-0 tw-py-2.5;
+    }
+
+    .mat-mdc-form-field-icon-prefix {
+      @apply tw-pl-4 tw-pr-2;
+    }
+
+    .mdc-notched-outline,
+    .mat-mdc-form-field-subscript-wrapper {
+      @apply tw-hidden;
+    }
+
+    .mat-mdc-form-field-focus-overlay {
+      @apply tw-bg-transparent;
+    }
+  }
+}

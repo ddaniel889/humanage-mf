@@ -1,0 +1,157 @@
+{
+  "leavesManagement": {
+    "page": {
+      "title": "License Configuration",
+      "description": "Create and manage licenses. If you have already configured agreements or groups, you will be able to assign different rules to each one.",
+      "findFilterPlaceholder": "Search license",
+      "stateFilterPlaceholder": "Filter by status",
+      "leaves": "Licenses",
+      "leavesCreated": "{count, plural, =0 {No licenses} one {1 license created} other {# licenses created}}",
+      "createLeave": "Create license",
+      "createLeaveDisabledTooltip": "There are no available license types to create.",
+      "emptyState": {
+        "message": "No licenses created yet!",
+        "description": "Your company's licenses will appear here. To get started, please create a new license."
+      }
+    },
+    "table": {
+      "header": {
+        "type": "Type",
+        "assignment": "Assigned groups"
+      },
+      "actions": {
+        "addGroup": "Add group",
+        "viewDetail": "View detail"
+      }
+    }
+  },
+  "leaveTypeDetail": {
+    "page": {
+      "errorMessage": "Could not load leave type data. Please try again."
+    },
+    "actions": {
+      "edit": "Edit",
+      "addGroup": "Add group"
+    }
+  },
+  "dialogAddGroupToLeaveType": {
+    "title": "Add group to {{ leaveTypeName }}",
+    "employees": "employees",
+    "confirm": "Add group",
+    "emptyState": {
+      "title": "There are no more groups to assign!",
+      "description": "You already assigned all groups to this leave type. Create a new group to apply new rules.",
+      "createGroup": "Create group"
+    }
+  },
+  "dialogLeaveTypeForm": {
+    "createTitle": "Create license",
+    "editTitle": "Edit license",
+    "configurationOf": "Configuration of",
+    "group": "Group",
+    "cancel": "Cancel",
+    "submit": "Finish",
+    "continue": "Continue",
+    "back": "Back",
+    "selectionLeaveTitle": "Select type",
+    "sections": {
+      "request": "Request",
+      "moreInformation": "More information"
+    },
+    "moreInformation": {
+      "vacation": {
+        "daysAssigned": "Days are assigned from the employee detail or via Excel bulk upload.",
+        "validityPeriod": "At least one active validity period must exist for employees to use vacations.",
+        "expiration": "Unused days expire when the configured validity period ends."
+      },
+      "perYear": {
+        "automaticAssignment": "When creating this license, days will be automatically assigned to employees in the selected group for the selected year.",
+        "assignmentDelay": "Assignment may take a few moments to be reflected for all employees.",
+        "futureEmployees": "Employees who join the group later will receive days according to configured rules."
+      },
+      "perRequest": {
+        "configuredDays": "Configured days are applied to each request created by the employee."
+      },
+      "noLimit": {
+        "unlimitedRequests": "For this license type, employees can create requests without day limits."
+      }
+    },
+    "useConsecutiveDaysWarning": {
+      "title": "You are about to change how days are calculated.",
+      "description": "New leave requests will follow the new rule. Existing requests will keep the original calculation.\nDo you want to continue?"
+    },
+    "workflowApproveHrWarning": {
+      "title": "You are about to change the approval workflow.",
+      "description": "Switching to HR-based approval means managers will no longer participate in requests and may be unassigned if not used in other leave types or groups.\nDo you want to continue?"
+    },
+    "success": {
+      "createTitle": "New license created successfully",
+      "editTitle": "License edited successfully",
+      "description": "You can edit and manage licenses from the \"Licenses\" panel",
+      "confirmButton": "Go to licenses panel"
+    }
+  },
+  "fields": {
+    "leaveType": {
+      "vacation": "Vacation",
+      "sick": "Illness",
+      "maternity": "Maternity",
+      "study": "Study",
+      "paternity": "Paternity",
+      "accident": "Accident",
+      "preventiveExams": "Preventive exams",
+      "familyDeath": "Family bereavement",
+      "marriage": "Marriage",
+      "move": "Move",
+      "bloodDonation": "Blood donation"
+    },
+    "workflowApprove": {
+      "label": "Approval workflow",
+      "tooltip": {
+        "1": "The Manager validates leave requests from their Team but they remain pending HR approval, or rejects them without HR intervention.\nHR approves or rejects requests whether or not they were validated by the Manager.",
+        "2": "HR manages all employee leave requests, performing their approval or rejection.",
+        "3": "The Manager manages all leave requests from their Team, performing their approval or rejection.\nHR approves or rejects requests from employees who do not have an assigned Manager.",
+        "4": "The Manager validates leave requests from their Team but they remain pending HR approval, or rejects them without HR intervention.\nHR approves or rejects requests once validated by the Manager. Also approves or rejects requests from employees who do not have an assigned Manager."
+      },
+      "1": "Optional MANAGER approval and required HR",
+      "2": "HR-based approval",
+      "3": "MANAGER-based approval",
+      "4": "Required MANAGER and HR approval"
+    },
+    "leaveMinDays": "Minimum days to request",
+    "leaveMaxDays": "Maximum days to request",
+    "quantityDays": "Quantity of days",
+    "leaveStartDay": {
+      "label": "Start day",
+      "any": "Any day",
+      "monday": "Monday",
+      "tuesday": "Tuesday",
+      "wednesday": "Wednesday",
+      "thursday": "Thursday",
+      "friday": "Friday",
+      "saturday": "Saturday",
+      "sunday": "Sunday"
+    },
+    "useConsecutiveDays": {
+      "label": "Days Computation",
+      "tooltip": {
+        "consecutiveDays": "All days are counted consecutively, including weekends and holidays",
+        "businessDays": "Only the company's business days are counted, excluding holidays defined in the work calendar"
+      },
+      "consecutiveDays": "Consecutive Days",
+      "businessDays": "Business Days"
+    },
+    "nextAbleDay": {
+      "label": "Starts on the first business day of the week",
+      "yes": "Yes",
+      "no": "No"
+    },
+    "assignmentDay": {
+      "label": "Day assignment",
+      "manualPerYear": "Configurable by employee per year",
+      "perYear": "Assign days per year",
+      "perRequest": "Assign days per request",
+      "noLimit": "No limit"
+    }
+  }
+}

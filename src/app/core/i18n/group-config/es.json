@@ -1,0 +1,134 @@
+{
+  "groupConfig": {
+    "title": "Configuración de grupos o convenios",
+    "employeesWithoutGroupTooltip": "Todos los empleados que no pertenezcan a un grupo aparecerán como sin grupo",
+    "employeesWithoutGroupHeading": "Empleados sin grupo"
+  },
+  "groupDetails": {
+    "identifier": "Identificador",
+    "description": "Descripción",
+    "employees": "Empleados",
+    "employeesListTitle": "Empleados",
+    "editGroup": "Editar",
+    "deleteGroup": "Eliminar grupo"
+  },
+  "employeeList": {
+    "employeesFound": "{count, plural, =0 {Sin empleados} one {1 empleado encontrado} other {# empleados encontrados}}",
+    "searchPlaceholder": "Buscar por nombre",
+    "filterEmployees": "Filtrar empleados",
+    "assignToGroup": "Asignar a un grupo",
+    "columns": {
+      "name": "Nombre",
+      "file": "Legajo",
+      "fiscalId": "ID fiscal",
+      "area": "Área",
+      "joinDate": "Ingreso"
+    },
+    "actions": {
+      "openRowActions": "Abrir acciones",
+      "assignToOtherGroup": "Asignar a otro grupo",
+      "removeFromGroup": "Eliminar del grupo"
+    },
+    "emptyState": {
+      "message": "¡No hay empleados asignados todavía!",
+      "description": "Aquí aparecerán los empleados que pertenecen a este grupo",
+      "filteredMessage": "No se encontraron empleados",
+      "filteredDescription": "Ningún empleado coincide con los criterios de búsqueda"
+    },
+    "sideBarFilter": {
+      "title": "Búsqueda Avanzada",
+      "close": "Cerrar",
+      "search": "Buscar",
+      "tabs": {
+        "employeeData": "Datos del Empleado"
+      },
+      "fields": {
+        "fiscalId": "Id fiscal",
+        "fileNumber": "Número de legajo"
+      },
+      "fileStatus": {
+        "title": "Estado del Legajo",
+        "subtitle": "Buscar solo los Activos",
+        "active": "Activo",
+        "inactive": "Inactivo"
+      },
+      "signCondition": {
+        "title": "Condición de Firma",
+        "subtitle": "Buscar todas",
+        "enabled": "Habilitada",
+        "pending": "Pendiente",
+        "disabled": "Inhabilitada"
+      },
+      "humanageAccess": {
+        "title": "Acceso a Humanage",
+        "subtitle": "Buscar Todos",
+        "accessed": "Ingresaron",
+        "notAccessed": "No ingresaron"
+      }
+    }
+  },
+  "groupList": {
+    "title": "Grupos",
+    "groupCreated": "{count, plural, =0 {Ningun grupo creado} one {1 grupo creado} other {# grupos creados}}",
+    "createGroup": "Crear grupo",
+    "columns": {
+      "agreement": "Convenio",
+      "identifier": "Identificador",
+      "description": "Descripción",
+      "employees": "Empleados",
+      "status": "Estado"
+    },
+    "employeesSuffix": "empleados",
+    "actions": {
+      "viewDetail": "Ver detalle",
+      "editGroup": "Editar grupo"
+    },
+    "emptyState": {
+      "message": "¡No hay grupos creados todavía!",
+      "description": "Aquí aparecerán los grupos de tu empresa, para empezar por favor crea un grupo"
+    }
+  },
+  "dialogGroupForm": {
+    "createTitle": "Crear grupo",
+    "editTitle": "Editar grupo",
+    "createSubmit": "Crear",
+    "editSubmit": "Guardar",
+    "cancel": "Cancelar",
+    "form": {
+      "name": {
+        "label": "Nombre del grupo",
+        "placeholder": "Ej. Grupo A",
+        "required": "El nombre es requerido",
+        "maxlength": "El nombre no puede superar los 40 caracteres"
+      },
+      "description": {
+        "label": "Descripción",
+        "placeholder": "Descripción del grupo",
+        "required": "La descripción es requerida",
+        "maxlength": "La descripción no puede superar los 60 caracteres"
+      },
+      "codeCct": {
+        "label": "Identificador del grupo",
+        "placeholder": "Ej. 130/75",
+        "maxlength": "El identificador no puede superar los 20 caracteres"
+      }
+    },
+    "success": {
+      "createTitle": "Nuevo grupo creado con éxito",
+      "editTitle": "Grupo editado con éxito",
+      "description": "Podrás editar y gestionar tus grupos desde el panel \"Grupos o convenios\"",
+      "confirmButton": "Ir al panel de grupos o convenios"
+    }
+  },
+  "dialogAssignGroup": {
+    "title": "{count, plural, one {¿A qué grupo quieres asignarlo?} other {¿A qué grupo quieres asignarlos?}}",
+    "selectedEmployees": "{count, plural, one {1 empleado seleccionado} other {# empleados seleccionados}}",
+    "employees": "empleados",
+    "assign": "Asignar",
+    "assignFailed": "{count, plural, one {1 empleado no pudo ser asignado} other {# empleados no pudieron ser asignados}}"
+  },
+  "dialogAssignSuccess": {
+    "title": "{count, plural, one {¡Empleado asignado con éxito!} other {¡Empleados asignados con éxito!}}",
+    "description": "Los empleados seleccionados ahora pertenecen al grupo \"{{ groupName }}\""
+  }
+}

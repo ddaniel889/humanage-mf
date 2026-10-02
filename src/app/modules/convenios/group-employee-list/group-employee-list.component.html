@@ -1,0 +1,243 @@
+<ng-container *transloco="let t; prefix: 'groupConfig.employeeList'">
+  <div class="tw-flex tw-flex-col tw-h-full tw-min-h-0">
+    <div id="header" class="tw-flex tw-justify-between tw-items-start tw-mb-4">
+      <div>
+        <div class="tw-flex tw-gap-2">
+          <div class="tw-flex tw-flex-col tw-gap-0">
+            <div>
+              <h2 class="tw-text-xl tw-font-semibold">{{ heading() }}</h2>
+            </div>
+            <span class="tw-text-xs tw-font-bold tw-text-primary">{{
+              t('employeesFound', { count: employees.value()?.totalCount ?? 0 })
+            }}</span>
+          </div>
+          @if (tooltip()) {
+            <i
+              class="fa fa-question-circle tw-text-primary tw-size-5 tw-text-xl"
+              aria-hidden="true"
+              [matTooltip]="tooltip()"
+              matTooltipClass="mf-hl-tailwind-scope tw-text-sm"
+              matTooltipPosition="right"
+            ></i>
+          }
+        </div>
+      </div>
+
+      @if (isNoGroupList()) {
+        <div id="filter" class="tw-flex tw-items-center tw-gap-3">
+          <mat-form-field
+            appearance="outline"
+            subscriptSizing="dynamic"
+            class="hl-search-input tw-w-80 tw-max-w-full"
+          >
+            <i matPrefix class="fa fa-search tw-flex tw-items-center tw-text-xl tw-size-6"></i>
+            <input
+              matInput
+              [value]="searchText()"
+              (input)="onNameFilterInput($any($event.target).value)"
+              [placeholder]="t('searchPlaceholder')"
+              #input
+              class="tw-text-sm"
+            />
+            @if (searchText()) {
+              <button
+                mat-icon-button
+                matSuffix
+                type="button"
+                aria-label="Clear search"
+                class="tw-size-8"
+                (click)="clearNameFilter()"
+              >
+                <i class="fa fa-times tw-text-sm" aria-hidden="true"></i>
+              </button>
+            }
+          </mat-form-field>
+        </div>
+      }
+    </div>
+
+    @if (employees.isLoading()) {
+      <mat-progress-bar mode="indeterminate" color="primary" class="tw-mb-3"></mat-progress-bar>
+    }
+
+    @if (!employees.isLoading() || employees.value()) {
+      @if ((employees.value()?.totalCount ?? 0) > 0) {
+        <div class="tw-mb-6">
+          <div class="hl-table">
+            @if (selection.hasValue()) {
+              <div class="hl-action-header-row">
+                <button
+                  type="button"
+                  class="tw-text-primary tw-font-bold tw-text-sm tw-bg-transparent tw-border-0 tw-cursor-pointer tw-p-0"
+                  (click)="openGroupAssingDialog()"
+                >
+                  {{ t('assignToGroup') }}
+                </button>
+              </div>
+            }
+
+            <table
+              mat-table
+              [dataSource]="dataSource()"
+              class="tw-w-full [&_th]:tw-whitespace-nowrap [&_td]:tw-whitespace-nowrap"
+            >
+              <!-- Checkbox Column -->
+              <ng-container matColumnDef="select">
+                <th
+                  mat-header-cell
+                  *matHeaderCellDef
+                  class="tw-font-bold tw-text-sm hl-checkbox-cell"
+                >
+                  <mat-checkbox
+                    (change)="$event ? toggleAllRows() : null"
+                    [checked]="selection.hasValue() && isAllSelected()"
+                    [indeterminate]="selection.hasValue() && !isAllSelected()"
+                    [aria-label]="checkboxLabel()"
+                    [color]="'primary'"
+                  >
+                  </mat-checkbox>
+                </th>
+                <td
+                  mat-cell
+                  *matCellDef="let row; let i = index"
+                  class="tw-font-medium tw-text-sm hl-checkbox-cell"
+                >
+                  <mat-checkbox
+                    (click)="$event.stopPropagation()"
+                    (keypress)="$event.stopPropagation()"
+                    (change)="$event ? selection.toggle(row) : null"
+                    [checked]="selection.isSelected(row)"
+                    [aria-label]="checkboxLabel(row, i)"
+                    [color]="'primary'"
+                  >
+                  </mat-checkbox>
+                </td>
+              </ng-container>
+
+              <!-- Name Column -->
+              <ng-container matColumnDef="name">
+                <th mat-header-cell *matHeaderCellDef class="tw-text-left">
+                  {{ t('columns.name') }}
+                </th>
+                <td mat-cell *matCellDef="let element" class="tw-text-left">
+                  {{ element.firstName }} {{ element.lastName }}
+                </td>
+              </ng-container>
+
+              <!-- File Column -->
+              <ng-container matColumnDef="file">
+                <th mat-header-cell mat-sort-header *matHeaderCellDef>{{ t('columns.file') }}</th>
+                <td mat-cell *matCellDef="let element">
+                  {{ element.nroLeg }}
+                </td>
+              </ng-container>
+
+              <!-- id Column -->
+              <ng-container matColumnDef="id">
+                <th mat-header-cell *matHeaderCellDef>
+                  {{ t('columns.fiscalId') }}
+                </th>
+                <td mat-cell *matCellDef="let element">
+                  {{ element.idFiscal | mask: idFiscalMask }}
+                </td>
+              </ng-container>
+
+              <!-- area Column -->
+              <ng-container matColumnDef="area">
+                <th mat-header-cell *matHeaderCellDef>
+                  {{ t('columns.area') }}
+                </th>
+                <td mat-cell *matCellDef="let element">
+                  {{ element.area }}
+                </td>
+              </ng-container>
+
+              <!-- joinDate Column -->
+              <ng-container matColumnDef="joinDate">
+                <th mat-header-cell *matHeaderCellDef>
+                  {{ t('columns.joinDate') }}
+                </th>
+                <td mat-cell *matCellDef="let element">
+                  {{ element.joinDate }}
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="spacer">
+                <th mat-header-cell *matHeaderCellDef class="tw-p-0 tw-w-full"></th>
+                <td mat-cell *matCellDef="let _" class="tw-p-0 tw-w-full"></td>
+              </ng-container>
+
+              <!-- Actions Column -->
+              <ng-container matColumnDef="actions">
+                <th mat-header-cell *matHeaderCellDef class="hl-actions-cell"></th>
+                <td mat-cell *matCellDef="let element" class="hl-actions-cell">
+                  <button
+                    mat-icon-button
+                    color="primary"
+                    class="hl-action-btn"
+                    [matMenuTriggerFor]="groupRowMenu"
+                    [matMenuTriggerData]="{ element: element }"
+                  >
+                    <i class="fa fa-ellipsis-v" aria-hidden="true"></i>
+                  </button>
+                </td>
+              </ng-container>
+
+              <tr
+                mat-header-row
+                *matHeaderRowDef="displayedColumns(); sticky: true"
+                class="tw-h-auto"
+              ></tr>
+              <tr mat-row *matRowDef="let row; columns: displayedColumns()" class="tw-h-auto"></tr>
+            </table>
+
+            <mat-menu #groupRowMenu="matMenu">
+              <ng-template matMenuContent let-element="element">
+                <button mat-menu-item (click)="assignToGroup(element)">
+                  <i
+                    class="fa fa-users tw-text-primary tw-w-6 tw-text-center tw-mr-2"
+                    aria-hidden="true"
+                  ></i>
+                  <span class="tw-text-sm tw-self-center">Asignar a otro grupo</span>
+                </button>
+                <button mat-menu-item>
+                  <i
+                    class="fa fa-trash tw-text-primary tw-w-6 tw-text-center tw-mr-2"
+                    aria-hidden="true"
+                  ></i>
+                  <span class="tw-text-sm tw-self-center">Eliminar del grupo</span>
+                </button>
+              </ng-template>
+            </mat-menu>
+
+            @if (employees.value()?.totalCount > 10) {
+              <mat-paginator
+                [length]="employees.value()?.totalCount ?? 0"
+                [pageSize]="pageSize()"
+                [pageIndex]="(employees.value()?.currentPage ?? 1) - 1"
+                [pageSizeOptions]="[10, 20]"
+                showFirstLastButtons
+                (page)="onPageChange($event)"
+              >
+              </mat-paginator>
+            }
+          </div>
+        </div>
+      } @else {
+        @if (hasActiveFilter()) {
+          <hl-empty-state
+            iconName="people"
+            [message]="t('emptyState.filteredMessage')"
+            [description]="t('emptyState.filteredDescription')"
+          />
+        } @else {
+          <hl-empty-state
+            iconName="people"
+            [message]="t('emptyState.message')"
+            [description]="t('emptyState.description')"
+          />
+        }
+      }
+    }
+  </div>
+</ng-container>

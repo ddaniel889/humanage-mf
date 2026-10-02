@@ -1,0 +1,71 @@
+<div class="leave_detail">
+  @if (!isLoading) {
+    <div class="leave_detail-title tw-flex tw-items-center">
+      <div class="info tw-flex tw-items-center tw-gap-4">
+        <mat-icon
+          class="fa-lg"
+          fontSet="fas"
+          [fontIcon]="!isHollyday ? 'fa-money-check' : 'fa-umbrella-beach'"
+        >
+        </mat-icon>
+        <div class="tw-flex tw-flex-col">
+          <h3>
+            {{ !isHollyday ? 'Solicitud de Vacaciones vencidas' : 'Solicitud de Vacaciones' }}
+          </h3>
+          <h5 class="daysInfo">
+            <b>
+              {{
+                daysRequests +
+                  (leaveRequestDraft === true
+                    ? daysRequests > 1
+                      ? ' días propuestos'
+                      : ' día propuesto'
+                    : daysRequests > 1
+                      ? ' días solicitados'
+                      : ' día solicitado')
+              }}
+            </b>
+            @if (isHollyday) {
+              desde el
+              <b>{{ ' ' + (dateFrom | translocoDate: { day: '2-digit', month: '2-digit', year: 'numeric' }) }}</b>
+              hasta el
+              <b>{{ ' ' + (dateTo | translocoDate: { day: '2-digit', month: '2-digit', year: 'numeric' }) }}</b>
+            }
+          </h5>
+        </div>
+      </div>
+    </div>
+    <div class="leave_detail-container">
+      <app-chapa
+        [className]="getLeaveClassName()"
+        [icon]="getLeaveIcon()"
+        [text]="getLeaveText()"
+        [subText]="getLeaveSubtext()"
+        [actionIcon]="
+          (this.stateName === 'PENDIENTE' || this.stateName === 'BORRADOR') && validDate
+            ? 'fa-times-circle'
+            : null
+        "
+        [buttonColor]="'accent'"
+        [leaveDetail]="leaveDetail"
+        [leaveRequestDraft]="leaveRequestDraft"
+        [textDraft]="this.stateName === 'BORRADOR' ? 'Seleccioná una opción' : ''"
+        [headerDraft]="headerDraftText()"
+        [isApprover]="getIsApprover()"
+        [actionText]="this.stateName === 'PENDIENTE' && validDate ? 'Cancelar Solicitud' : null"
+        (actionClick)="cancelLeave()"
+        (ApproveRejectClick)="approveReject($event)"
+        (ViewDocumentClick)="viewDocument()"
+        [hasDocument]="leaveDetail?.documentId > 0"
+        [isValidated]="isValidated"
+      >
+      </app-chapa>
+    </div>
+  }
+  <!-- loading -->
+  @if (isLoading) {
+    <div class="leave_detail-loading tw-flex tw-items-center tw-justify-center">
+      <mat-progress-spinner mode="indeterminate" color="primary"> </mat-progress-spinner>
+    </div>
+  }
+</div>

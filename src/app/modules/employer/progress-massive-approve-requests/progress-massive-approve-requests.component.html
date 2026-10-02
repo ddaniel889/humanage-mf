@@ -1,0 +1,30 @@
+<div class="new_leave_modal tw-w-[520px] tw-max-w-full">
+  <div class="new_leave_modal-toolbar tw-flex tw-flex-row tw-justify-between tw-items-center tw-gap-4">
+    <div class="new_leave_modal-title tw-flex tw-flex-row tw-justify-start tw-items-center tw-gap-4">
+      <div class="new_leave_modal-title_content tw-flex tw-flex-col">
+        <!-- titulo -->
+        <h4 class="tw-font-bold tw-text-[#3f51b5]">Proceso en Ejecución. Aguarde un Instante</h4>
+      </div>
+    </div>
+    <!-- cerrar modal -->
+    <button mat-icon-button mat-dialog-close class="tw-flex tw-justify-center tw-items-center">
+      <mat-icon class="fa-lg" fontSet="fa" fontIcon="fa-times">
+      </mat-icon>
+    </button>
+  </div>
+  <div class="tw-flex tw-flex-col tw-px-4 tw-pt-4 tw-pb-5">
+    <div class="new_leave_modal-form tw-text-center tw-w-full tw-mb-2">
+      <span>{{percent}}%</span>
+    </div>
+    <div class="new_leave_modal-form tw-mb-5 ">
+      <mat-progress-bar mode="determinate" [value]="percent"></mat-progress-bar>
+    </div>
+    <div class="new_leave_modal-form tw-flex tw-flex-col tw-justify-center tw-gap-2.5 tw-mb-5">
+      <span>Puedes cancelar el proceso si así lo deseas</span>
+      <button mat-button mat-dialog-close>Cancelar</button>
+    </div>
+    <div class="new_leave_modal-form">
+      <mat-progress-bar mode="buffer"></mat-progress-bar>
+    </div>
+  </div>
+</div>

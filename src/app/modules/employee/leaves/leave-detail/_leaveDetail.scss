@@ -1,0 +1,120 @@
+// TODO(ECM-12229): archivo de referencia para la migración. NO importar aún — @mixin para theming no referenciado en microfrontend.
+
+@mixin leaveDetail($primary-text, $text-side, $leave-pending, $leave-bk-pending, $leave-ok, $leave-bk-ok, $leave-not-ok, $leave-bk-not-ok, $leave-cancelled, $leave-bk-cancelled,$leave-draft,$leave-bk-draft,$text-main,$bg-toolbar-light,$divider) {
+  app-leave-detail {
+    .leave_detail {
+      .leave_detail-title {
+        .info {
+
+          h3,
+          mat-icon {
+            color: $primary-text;
+          }
+        }
+      }
+
+      .leave_detail-container {
+        app-chapa {
+          .upload-warning {
+            .ok {
+              .large-icon {
+                background: $leave-bk-ok;
+                color: $leave-ok;
+              }
+
+              h2 {
+                color: $leave-ok;
+              }
+            }
+
+            .not-ok {
+              .large-icon {
+                background: $leave-bk-not-ok;
+                color: $leave-not-ok;
+              }
+
+              h2 {
+                color: $leave-not-ok;
+              }
+            }
+
+            .pending {
+              .large-icon {
+
+                background: $leave-bk-pending;
+                color: $leave-pending;
+              }
+
+              h2 {
+                color: $leave-pending;
+              }
+            }
+
+            .draft {
+              .large-icon {
+
+                background: $leave-bk-draft;
+                color: $leave-draft;
+              }
+
+              h2 {
+                color: $leave-draft;
+              }
+            }
+
+            .cancelled {
+              .large-icon {
+
+                background: $leave-bk-cancelled;
+                color: $leave-cancelled;
+              }
+
+              h2 {
+                color: $leave-cancelled;
+              }
+            }
+
+            .actions {
+              padding: 16px;
+              height: 96px;
+              column-gap: 16px;
+
+              button {
+
+                      &.ok {
+                        background: $leave-ok !important;
+                        color: $text-main;
+                      }
+
+                      &.not-ok {
+                        color: $leave-not-ok !important;
+                      }
+                height: 100%;
+                border-radius: 40px;
+              }
+            }
+
+             mat-basic-chip {
+              background: $bg-toolbar-light !important;
+              border: 1px solid $divider !important;
+              border-radius: 40px !important;
+              height: 35px !important;
+              &.signed-ok {
+                border-color: $leave-ok !important;
+                color: $leave-ok!important;
+              }
+              &.signed-not-ok {
+                border-color: $leave-not-ok!important;
+                color: $leave-not-ok !important;
+              }
+              &.draft {
+                border-color: $leave-draft!important;
+                color: $leave-draft !important;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

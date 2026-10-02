@@ -1,0 +1,59 @@
+// Note: This component uses Encapsulation.None, meaning these styles will apply globally.
+// Use caution to avoid unintended side effects.
+
+@use '@angular/material' as mat;
+
+$select-radius: 8px;
+
+.mf-ou-form-field {
+  color: var(--mf-ou-select-text-color);
+  @include mat.form-field-overrides(
+    (
+      // background:
+      filled-container-color: var(--mf-ou-select-bg),
+      // bottom line:
+      filled-active-indicator-color: var(--mf-ou-select-bg),
+      filled-hover-active-indicator-color: var(--mf-ou-select-bg),
+      filled-focus-active-indicator-color: var(--mf-ou-select-bg),
+      // label color
+      filled-label-text-color: var(--mf-ou-select-text-color),
+      filled-focus-label-text-color: var(--mf-ou-select-text-color),
+      filled-hover-label-text-color: var(--mf-ou-select-text-color)
+    )
+  );
+
+  @include mat.select-overrides(
+    (
+      enabled-trigger-text-color: var(--mf-ou-select-text-color),
+      enabled-arrow-color: var(--mf-ou-select-text-color),
+      focused-arrow-color: var(--mf-ou-select-text-color),
+      trigger-text-weight: 700,
+    )
+  );
+
+  .mat-mdc-text-field-wrapper {
+    padding: 12px 20px 12px 10px !important;
+    border-radius: $select-radius;
+    overflow: hidden;
+
+    .mat-mdc-select-value {
+      font-size: 20px;
+    }
+
+  }
+
+  &.mat-focused {
+    .mat-form-field-flex, .mat-mdc-text-field-wrapper {
+      border-radius: $select-radius $select-radius 0 0 !important;
+      @include mat.elevation(4);
+    }
+  }
+
+  .mat-mdc-form-field-subscript-wrapper {
+    display: none;
+  }
+}
+
+.mf-ou-select-panel {
+  border-radius: 0 0 $select-radius $select-radius !important;
+}

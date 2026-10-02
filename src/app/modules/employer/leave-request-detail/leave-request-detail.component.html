@@ -1,0 +1,165 @@
+<!-- eslint-disable @angular-eslint/template/eqeqeq -->
+<form class="tw-w-full tw-h-full tw-flex-1">
+  <!-- cabecera detalles -->
+  <div
+    class="leave_detail-container"
+    [ngClass]="{ 'tw-hidden': loading, 'tw-flex tw-flex-col': !loading }"
+  >
+    <div class="toolbar tw-flex tw-justify-between tw-items-center tw-gap-4">
+      <div class="header tw-flex tw-justify-start tw-items-center tw-gap-4">
+        <mat-icon class="fa-lg" fontSet="fas" [fontIcon]=getLeaveTypeIcon(leaveRequest)>
+        </mat-icon>
+        <div class="text tw-flex tw-flex-col">
+          <h3>{{getLeaveTypeName(leaveRequest)}}</h3>
+          <h5>Detalles de solicitud</h5>
+        </div>
+      </div>
+      <!-- cerrar detalles -->
+      <button mat-icon-button type="button" class="tw-flex tw-justify-center tw-items-center" (click)="close()">
+        <mat-icon class="fa-lg" fontSet="fas" fontIcon="fa-times">
+        </mat-icon>
+      </button>
+    </div>
+    <!-- datos -->
+    <div class="leave_detail-container-content tw-flex tw-flex-col tw-gap-4 tw-grow">
+      <!-- body detalle del solicitante-->
+      <div class="leave_resume tw-flex tw-flex-col">
+        <!-- cabecera detalle del solicitante-->
+        <h3 class="leave_resume-title primary">Datos del solicitante</h3>
+        <!-- name -->
+        <div class="line tw-flex tw-flex-col">
+          <h6>Apellido y Nombre</h6>
+          <h3>{{leaveRequest?.userName}}</h3>
+        </div>
+        <!-- employee id -->
+        <div class="line tw-flex tw-flex-col" *ngIf="leaveRequest?.legajo">
+          <h6>Legajo</h6>
+          <h3>{{leaveRequest?.legajo}}</h3>
+        </div>
+        <!-- mail -->
+        <div class="line tw-flex tw-flex-col">
+          <h6>Correo Electrónico</h6>
+          <h3>{{leaveRequest?.userEmail}}</h3>
+        </div>
+        <!-- phone -->
+        <div class="line tw-flex tw-flex-col" *ngIf="leaveRequest?.userTelephone">
+          <h6>Teléfono</h6>
+          <h3>{{leaveRequest?.userTelephone}}</h3>
+        </div>
+
+        <mat-divider></mat-divider>
+        <!-- total days available -->
+  <div class="line tw-flex tw-flex-col" *ngIf="leaveRequest?.totalDays > 0">
+          <h6> Días de Vacaciones totales </h6>
+          <h3>
+            {{leaveRequest.totalDays + ' días'}}
+
+            <span class="line-side">
+              (Año: {{ leaveRequest?.configLeaveOu?.year}})
+            </span>
+          </h3>
+        </div>
+        <!-- days left -->
+  <div class="line tw-flex tw-flex-col" *ngIf="leaveRequest?.availableDays > 0">
+          <h6> Días de Vacaciones disponibles para solicitar </h6>
+          <h3>
+            {{leaveRequest?.availableDays}} {{(leaveRequest?.availableDays || 0) > 1 ? 'días' : 'dia'}}
+          </h3>
+        </div>
+  <div class="line tw-flex tw-flex-col" *ngIf="leaveRequest?.totalDays == 0">
+          <h6> Días de Vacaciones totales </h6>
+          <h3>
+            Sin Días Disponibles
+          </h3>
+        </div>
+        <!-- days left -->
+  <div class="line tw-flex tw-flex-col" *ngIf="leaveRequest?.availableDays == 0">
+          <h6> Días de Vacaciones disponibles para solicitar </h6>
+          <h3>
+             Sin Días Disponibles
+          </h3>
+        </div>
+      </div>
+      <!-- body de la solicitud -->
+      <div class="leave_resume tw-flex tw-flex-col">
+        <!-- cabecera detalle de la solicitud-->
+        <h3 class="leave_resume-title accent">Datos de la solicitud</h3>
+        <!-- solicitados -->
+  <div class="line tw-flex tw-flex-col" *ngIf="leaveRequest?.state?.key !== '0'">
+          <h6>Año</h6>
+          <h3>{{leaveRequest?.configLeaveOu?.year}}</h3>
+        </div>
+  <div class="line tw-flex tw-flex-col" *ngIf="leaveRequest?.state?.key !== '0'">
+          <h6>Días Solicitados</h6>
+          <h3>{{leaveRequest?.daysConsumed}} {{(leaveRequest?.daysConsumed || 0) > 1 ? 'días' : 'día'}}</h3>
+        </div>
+  <div class="line tw-flex tw-flex-col" #draftText *ngIf="leaveRequest?.state?.key == '0'">
+          <h6>Días Propuestos</h6>
+          <h3>{{leaveRequest?.daysConsumed}} {{(leaveRequest?.daysConsumed || 0) > 1 ? 'días' : 'día'}}</h3>
+        </div>
+  <div class="line tw-flex tw-flex-col" *ngIf="leaveRequest?.state?.key == '3'">
+          <h6>Motivo de rechazo</h6>
+          <h3>{{leaveRequest?.state?.note}}</h3>
+        </div>
+  <div class="line tw-flex tw-flex-col" *ngIf="leaveRequest?.state?.key == '4'">
+          <h6>Motivo de cancelación</h6>
+          <h3>{{leaveRequest?.state?.note}}</h3>
+        </div>
+  <div class="line tw-flex tw-flex-col" *ngIf="leaveRequest?.state?.key == '0'">
+          <h6>Fecha de la solicitud </h6>
+          <h3>{{leaveRequest?.state?.stateDate | date: 'd/M/yyyy HH:mm'}} </h3>
+        </div>
+  <div class="line tw-flex tw-flex-col" *ngIf="leaveRequest?.state?.key == '0'">
+          <h6>Propuestos por </h6>
+          <h3>{{ (leaveRequest?.createdBy?.firstName || '') + ' ' + (leaveRequest?.createdBy?.lastName || '') }} </h3>
+        </div>
+  <div class="line tw-flex tw-flex-col" *ngIf="leaveRequest?.state?.key == '2' || leaveRequest?.state?.key == '3'">
+          <h6>Fecha en la que se {{getAccionName(leaveRequest.state.key)}} </h6>
+          <h3>{{leaveRequest?.state?.stateDate | date: 'd/M/yyyy HH:mm'}} </h3>
+        </div>
+  <div class="line tw-flex tw-flex-col" *ngIf="leaveRequest?.state?.key == '2' || leaveRequest?.state?.key == '3'">
+          <h6>Solicitud {{getName(leaveRequest.state.key)}} por </h6>
+          <h3>{{leaveRequest?.state?.userName}}</h3>
+        </div>
+      </div>
+  <div *ngIf="getOtherApprovers(configLeaveOu?.leaveTypeOu?.workflowApprove?.id,leaveRequest?.actionApprovers,leaveRequest?.state)" class="leave_resume tw-flex tw-flex-col">
+        <h3 class="leave_resume-title accent">Otros Aprobadores</h3>
+        <div *ngFor="let approvers of leaveRequest?.actionApprovers" class="line tw-flex tw-flex-col">
+          <h6>{{ getLabelOtherApprovers(configLeaveOu?.leaveTypeOu?.workflowApprove?.id,approvers?.action) }}</h6>
+            <h3>{{approvers?.firstName}} {{approvers?.lastName}}</h3>
+            <div *ngIf="getDateOtherApprovers(leaveRequest?.state?.key, approvers?.action)">
+              <h6>Fecha de validación</h6>
+              <h3>{{approvers?.fecha | date: 'd/M/yyyy HH:mm'}}</h3>
+            </div>
+        </div>
+      </div>
+    </div>
+    <!-- acciones -->
+    <div class="actions tw-flex tw-justify-between tw-items-center"
+      *ngIf="(selectedLeaveRequest?.stateId == '1' || selectedLeaveRequest?.stateId == '2') && canApprove">
+      <button name="btn_RechazarSolicitud" mat-stroked-button type="button" class="not-ok tw-flex-1"
+  (click)="approveReject(false, selectedLeaveRequest)"
+        *ngIf="showRejectBtn()">
+        <span class="tw-flex tw-gap-3 tw-justify-center tw-items-center">
+          <mat-icon fontSet="fas" fontIcon="fa-thumbs-down">
+          </mat-icon>
+          <span>
+            Rechazar Solicitud
+          </span>
+        </span>
+      </button>
+
+      <button name="btn_AprobarSolicitud" mat-raised-button type="button" class="ok tw-flex-1"
+  (click)="approveReject(true, selectedLeaveRequest)" *ngIf="showApproveBtn()">
+        <span class="tw-flex tw-gap-3 tw-justify-center tw-items-center">
+          <mat-icon fontSet="fas" fontIcon="fa-thumbs-up">
+          </mat-icon>
+          <span>
+            Aprobar Solicitud
+          </span>
+        </span>
+      </button>
+
+    </div>
+  </div>
+</form>

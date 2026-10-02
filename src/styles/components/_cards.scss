@@ -1,0 +1,73 @@
+// Card/Panel component styles
+
+.mf-hl-tailwind-scope {
+  // Card/Panel variables
+  --mf-card-border-radius: 10px;
+  --mf-card-bg: var(--mf-bg-card-elevated);
+  --mf-card-border: var(--mf-divider);
+}
+
+.dark .mf-hl-tailwind-scope {
+  --mf-card-border: var(--mf-bg-card-elevated);
+}
+
+@layer components {
+  .mf-hl-tailwind-scope {
+    .hl-header-card {
+      @apply tw-border tw-border-[var(--mf-card-border)] tw-rounded-[var(--mf-card-border-radius)];
+      @apply tw-bg-[var(--mf-card-bg)];
+      @apply tw-px-6 tw-py-4;
+      h1 {
+        @apply tw-text-2xl tw-font-bold;
+      }
+    }
+
+    .hl-card {
+      @apply tw-border tw-border-[var(--mf-card-border)] tw-rounded-[var(--mf-card-border-radius)];
+      @apply tw-bg-[var(--mf-card-bg)];
+
+      &--plain {
+        @apply tw-bg-mf-page;
+      }
+    }
+
+    .hl-more-information-panel {
+      background-color: var(--mf-card-bg) !important;
+      border: 1px solid var(--mf-card-border) !important;
+      border-radius: 5px;
+    }
+
+    .hl-more-information-list {
+      list-style: disc outside !important;
+
+      li {
+        display: list-item !important;
+        list-style: disc outside !important;
+      }
+    }
+
+    .hl-expansion-panel {
+      &.mat-expansion-panel {
+        background-color: var(--mf-card-bg) !important;
+        border: 1px solid var(--mf-card-border) !important;
+        border-radius: var(--mf-card-border-radius) !important;
+      }
+
+      .mat-expansion-panel-header {
+        &.mat-expanded {
+          background-color: unset !important;
+        }
+        padding: 16px 24px !important;
+        height: auto !important;
+      }
+
+      .mat-expansion-indicator::after {
+        @apply tw-border-default;
+      }
+
+      .mat-expansion-panel-body {
+        padding: 0 24px 24px 24px !important;
+      }
+    }
+  }
+}

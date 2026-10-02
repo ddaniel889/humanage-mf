@@ -1,0 +1,59 @@
+// Custom Theming for Angular Material
+// For more information: https://material.angular.io/guide/theming
+
+// Note: This theme uses Material Design 2
+// See: https://material.angular.io/guide/material-2-theming
+
+@use './mf-colors.scss' as mfColors;
+@use '@angular/material' as mat;
+@include mat.core();
+
+@mixin themeMixer($colorPri, $varPri, $colorAccent, $varAccent, $colorWarn, $varWarn, $scheme) {
+  $primary: mat.m2-define-palette($colorPri, $varPri);
+  $accent: mat.m2-define-palette($colorAccent, $varAccent);
+  $warn: mat.m2-define-palette($colorWarn, $varWarn);
+
+  $themeConfig: (
+    color: (
+      primary: $primary,
+      accent: $accent,
+      warn: $warn,
+    ),
+  );
+
+  $theme: null;
+  @if $scheme == light {
+    $theme: mat.m2-define-light-theme($themeConfig);
+  } @else {
+    $theme: mat.m2-define-dark-theme($themeConfig);
+  }
+
+  @include mat.all-component-themes($theme);
+
+  // Set the theme colors
+  @include mfColors.setMfColors($theme, $colorPri, $varPri, $colorAccent, $varAccent, $colorWarn, $varWarn, $scheme);
+}
+
+@mixin generateThemeVariants($selector, $priColor, $priLightVal, $priDarkVal, $accColor, $accLightVal, $accDarkVal) {
+  #{$selector} {
+    @include themeMixer($priColor, $priLightVal, $accColor, $accLightVal, mat.$m2-red-palette, 500, 'light');
+  }
+
+  #{$selector}.dark {
+    @include themeMixer($priColor, $priDarkVal, $accColor, $accDarkVal, mat.$m2-red-palette, 300, 'dark');
+  }
+}
+
+html {
+  // Base theme: indigo-pink light
+  @include themeMixer( mat.$m2-indigo-palette, 500, mat.$m2-pink-palette, 500, mat.$m2-red-palette, 500, 'light');
+
+  @include generateThemeVariants('.indigo-pink', mat.$m2-indigo-palette, 500, 200, mat.$m2-pink-palette, 500, 200);
+  @include generateThemeVariants('.indigo-purple', mat.$m2-indigo-palette, 500, 200, mat.$m2-purple-palette, 500, 200);
+  @include generateThemeVariants('.indigo-amber', mat.$m2-indigo-palette, 500, 200, mat.$m2-amber-palette, 500, 200);
+  @include generateThemeVariants('.indigo-blueGrey', mat.$m2-indigo-palette, 500, 200, mat.$m2-blue-grey-palette, 500, 200);
+  @include generateThemeVariants('.pink-pink', mat.$m2-pink-palette, 600, 300, mat.$m2-pink-palette, 500, 200);
+  @include generateThemeVariants('.pink-purple', mat.$m2-pink-palette, 500, 200, mat.$m2-purple-palette, 500, 200);
+  @include generateThemeVariants('.pink-amber', mat.$m2-pink-palette, 500, 200, mat.$m2-amber-palette, 500, 200);
+  @include generateThemeVariants('.pink-blueGrey', mat.$m2-pink-palette, 500, 200, mat.$m2-blue-grey-palette, 500, 200);
+}

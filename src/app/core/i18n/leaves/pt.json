@@ -1,0 +1,157 @@
+{
+  "leavesManagement": {
+    "page": {
+      "title": "Configuração de Licenças",
+      "description": "Crie e gerencie licenças. Se você já configurou acordos ou grupos, poderá atribuir regras diferentes a cada um.",
+      "findFilterPlaceholder": "Pesquisar licença",
+      "stateFilterPlaceholder": "Filtrar por status",
+      "leaves": "Licenças",
+      "leavesCreated": "{count, plural, =0 {Sem licenças} one {1 licença criada} other {# licenças criadas}}",
+      "createLeave": "Criar licença",
+      "createLeaveDisabledTooltip": "Não há tipos de licença disponíveis para criar.",
+      "emptyState": {
+        "message": "Nenhuma licença criada ainda!",
+        "description": "As licenças da sua empresa aparecerão aqui. Para começar, crie uma nova licença."
+      }
+    },
+    "table": {
+      "header": {
+        "type": "Tipo",
+        "assignment": "Grupos atribuídos"
+      },
+      "actions": {
+        "addGroup": "Adicionar grupo",
+        "viewDetail": "Ver detalhe"
+      }
+    }
+  },
+  "leaveTypeDetail": {
+    "page": {
+      "errorMessage": "Não foi possível carregar os dados do tipo de licença. Por favor, tente novamente."
+    },
+    "actions": {
+      "edit": "Editar",
+      "addGroup": "Adicionar grupo"
+    }
+  },
+  "dialogAddGroupToLeaveType": {
+    "title": "Adicionar grupo a {{ leaveTypeName }}",
+    "employees": "funcionários",
+    "confirm": "Adicionar grupo",
+    "emptyState": {
+      "title": "Não há mais grupos para atribuir!",
+      "description": "Você já atribuiu todos os grupos a esta licença. Crie um novo grupo para aplicar novas regras.",
+      "createGroup": "Criar grupo"
+    }
+  },
+  "dialogLeaveTypeForm": {
+    "createTitle": "Criar licença",
+    "editTitle": "Editar licença",
+    "configurationOf": "Configuração de",
+    "group": "Grupo",
+    "cancel": "Cancelar",
+    "submit": "Finalizar",
+    "continue": "Continuar",
+    "back": "Anterior",
+    "selectionLeaveTitle": "Selecionar tipo",
+    "sections": {
+      "request": "Solicitação",
+      "moreInformation": "Mais informações"
+    },
+    "moreInformation": {
+      "vacation": {
+        "daysAssigned": "Os dias são atribuídos a partir do detalhe do funcionário ou por upload em massa via Excel.",
+        "validityPeriod": "Deve existir pelo menos um período de vigência ativo para que os funcionários usem férias.",
+        "expiration": "Os dias não utilizados expiram quando o período de vigência configurado termina."
+      },
+      "perYear": {
+        "automaticAssignment": "Ao criar esta licença, os dias serão atribuídos automaticamente aos funcionários do grupo selecionado para o ano selecionado.",
+        "assignmentDelay": "A atribuição pode levar alguns momentos para ser refletida para todos os funcionários.",
+        "futureEmployees": "Os funcionários que entrarem no grupo posteriormente receberão dias de acordo com as regras configuradas."
+      },
+      "perRequest": {
+        "configuredDays": "Os dias configurados são aplicados a cada solicitação criada pelo funcionário."
+      },
+      "noLimit": {
+        "unlimitedRequests": "Para este tipo de licença, os funcionários podem criar solicitações sem limite de dias."
+      }
+    },
+    "useConsecutiveDaysWarning": {
+      "title": "Você está prestes a modificar a forma de cálculo dos dias.",
+      "description": "As novas solicitações de licença serão calculadas de acordo com a nova regra configurada. As solicitações anteriores manterão a regra original.\nDeseja continuar?"
+    },
+    "workflowApproveHrWarning": {
+      "title": "Você está prestes a modificar o fluxo de aprovação.",
+      "description": "Ao mudar para aprovação por RH, os gerentes deixarão de participar das solicitações e poderão ser desatribuídos se não forem utilizados em outros tipos de licença ou grupos.\nDeseja continuar?"
+    },
+    "success": {
+      "createTitle": "Nova licença criada com sucesso",
+      "editTitle": "Licença editada com sucesso",
+      "description": "Você pode editar e gerenciar as licenças no painel \"Licenças\"",
+      "confirmButton": "Ir ao painel de licenças"
+    }
+  },
+  "fields": {
+    "leaveType": {
+      "vacation": "Férias",
+      "sick": "Doença",
+      "maternity": "Maternidade",
+      "study": "Estudo",
+      "paternity": "Paternidade",
+      "accident": "Acidente",
+      "preventiveExams": "Exames preventivos",
+      "familyDeath": "Falecimento de familiar",
+      "marriage": "Casamento",
+      "move": "Mudança",
+      "bloodDonation": "Doação de sangue"
+    },
+    "workflowApprove": {
+      "label": "Fluxo de aprovação",
+      "tooltip": {
+        "1": "O Gerente valida as solicitações de licença de sua Equipe, mas elas permanecem pendentes de aprovação pelo RH, ou realiza a rejeição sem intervenção do RH.\nO RH aprova ou rejeita as solicitações validadas ou não pelo Gerente.",
+        "2": "O RH gerencia todas as solicitações de licença dos funcionários, realizando sua aprovação ou rejeição.",
+        "3": "O Gerente gerencia todas as solicitações de licença de sua Equipe, realizando sua aprovação ou rejeição.\nO RH aprova ou rejeita as solicitações de funcionários que não têm um Gerente atribuído.",
+        "4": "O Gerente valida as solicitações de licença de sua Equipe, mas elas permanecem pendentes de aprovação pelo RH, ou realiza a rejeição sem intervenção do RH.\nO RH aprova ou rejeita as solicitações uma vez validadas pelo Gerente. Também aprova ou rejeita as solicitações de funcionários que não têm um Gerente atribuído."
+      },
+      "1": "Aprovação opcional do GERENTE e obrigatória de RH",
+      "2": "Aprovação baseada em RH",
+      "3": "Aprovação baseada no GERENTE",
+      "4": "Aprovação obrigatória de GERENTE e RH"
+    },
+    "leaveMinDays": "Dias mínimos para solicitar",
+    "leaveMaxDays": "Dias máximos a solicitar",
+    "quantityDays": "Quantidade de dias",
+    "leaveStartDay": {
+      "label": "Dia de início",
+      "any": "Qualquer dia",
+      "monday": "Segunda-feira",
+      "tuesday": "Terça-feira",
+      "wednesday": "Quarta-feira",
+      "thursday": "Quinta-feira",
+      "friday": "Sexta-feira",
+      "saturday": "Sábado",
+      "sunday": "Domingo"
+    },
+    "useConsecutiveDays": {
+      "label": "Cálculo de dias",
+      "tooltip": {
+        "consecutiveDays": "Todos os dias são contados de forma consecutiva, incluindo fins de semana e feriados",
+        "businessDays": "São contados apenas os dias úteis da empresa, excluindo os feriados definidos no calendário de trabalho"
+      },
+      "consecutiveDays": "Dias corridos",
+      "businessDays": "Dias úteis"
+    },
+    "nextAbleDay": {
+      "label": "Inicia no primeiro dia útil da semana",
+      "yes": "Sim",
+      "no": "Não"
+    },
+    "assignmentDay": {
+      "label": "Atribuição de dias",
+      "manualPerYear": "Configurável pelo funcionário por ano",
+      "perYear": "Atribuir dias por ano",
+      "perRequest": "Atribuir dias por solicitação",
+      "noLimit": "Sem limite"
+    }
+  }
+}

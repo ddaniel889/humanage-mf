@@ -1,0 +1,255 @@
+<div
+  class="tw-flex tw-flex-col tw-h-full tw-text-default"
+  *transloco="let t; prefix: 'leaves.dialogLeaveTypeForm'"
+>
+  <div class="tw-flex tw-justify-end tw-items-center tw-px-8 tw-pt-8 tw-mb-2">
+    <button (click)="onCloseClick()">
+      <i class="fa fa-times tw-size-6 tw-text-2xl tw-text-primary" aria-hidden="true"></i>
+    </button>
+  </div>
+
+  <div class="tw-w-full tw-flex tw-justify-center tw-relative tw-flex-1 tw-overflow-y-auto tw-px-8">
+    @if (isLoading()) {
+      <div
+        class="tw-absolute tw-inset-0 tw-flex tw-items-center tw-justify-center tw-z-10 tw-bg-mf-page/60"
+      >
+        <mat-spinner></mat-spinner>
+      </div>
+    }
+    @switch (currentStep()) {
+      @case ('selectionLeave') {
+        <div class="tw-flex tw-flex-col tw-w-full tw-max-w-screen-lg">
+          <h1 class="tw-font-bold tw-text-primary tw-text-[28px] tw-mb-2">
+            {{ t('createTitle') }}
+          </h1>
+          <hl-selection-button-list
+            [items]="selectionList()"
+            [value]="leaveType()?.id"
+            (valueChange)="onLeaveTypeSelected($event)"
+            [title]="t('selectionLeaveTitle')"
+            name="leaveType"
+          />
+        </div>
+      }
+      @case ('configuration') {
+        <form
+          [formGroup]="form"
+          class="tw-flex tw-flex-col tw-items-start tw-w-full tw-max-w-screen-lg"
+        >
+          <h1 class="tw-font-bold tw-text-primary tw-text-[28px] tw-mb-2">
+            {{ isEditMode ? t('editTitle') : t('createTitle') }}
+          </h1>
+          <div class="tw-flex tw-gap-1 tw-flex-wrap tw-text-base tw-mb-6">
+            <span>{{ t('configurationOf') }}</span>
+            <span class="tw-font-semibold">{{ leaveTypeNameKey() | transloco }}</span>
+            @if (leaveGroupOu()) {
+              <span class="tw-mx-2 tw-border-l tw-border-default tw-opacity-20"></span>
+              <span>{{ t('group') }}</span>
+              <span class="tw-font-semibold">{{ leaveGroupOu()?.name }}</span>
+              @if (leaveGroupOu()?.isActive !== undefined) {
+                @let textKey =
+                  leaveGroupOu()!.isActive ? 'common.status.active' : 'common.status.inactive';
+                @let color = leaveGroupOu()!.isActive ? 'green' : 'red';
+                <hl-info-chip [text]="textKey | transloco" [color]="color" class="tw-ml-2" />
+              }
+            }
+          </div>
+          <div class="tw-flex tw-flex-col tw-gap-8">
+              <!-- Sección Asignación de días -->
+              @if (sections().assignmentDay) {
+                <section class="tw-flex tw-flex-col tw-items-start tw-gap-2">
+                  <div class="tw-flex tw-items-center tw-gap-2">
+                    <h2 class="tw-font-semibold tw-text-lg">
+                      {{ 'leaves.fields.assignmentDay.label' | transloco }}
+                    </h2>
+                  </div>
+                  <mat-radio-group formControlName="assignmentDayTypeId" color="accent">
+                    @for (option of assignmentDayOptions(); track $index) {
+                      <mat-radio-button [value]="option.value">
+                        {{ option.descriptionKey | transloco }}
+                      </mat-radio-button>
+                    }
+                  </mat-radio-group>
+
+                  @if (showQuantityDays()) {
+                    <mat-form-field class="tw-justify-start">
+                      <mat-label>{{ 'leaves.fields.quantityDays' | transloco }}</mat-label>
+                      <input
+                        matInput
+                        type="number"
+                        formControlName="quantityDays"
+                        [min]="1"
+                        [max]="366"
+                      />
+                      <mat-error [hlFormErrors]="form.controls.quantityDays"></mat-error>
+                    </mat-form-field>
+                  }
+                </section>
+              }
+
+              <!-- Sección Solicitud -->
+              @if (sections().request) {
+                <section class="tw-flex tw-flex-col tw-gap-2">
+                  <h2 class="tw-font-semibold tw-text-lg">
+                    {{ 'leaves.dialogLeaveTypeForm.sections.request' | transloco }}
+                  </h2>
+                  <div class="tw-flex tw-flex-wrap tw-gap-4 tw-items-center">
+                    @if (showUseConsecutiveDays()) {
+                      <div class="tw-flex tw-items-center tw-gap-2">
+                        <mat-form-field>
+                          <mat-label>{{ 'leaves.fields.useConsecutiveDays.label' | transloco }}</mat-label>
+                          <mat-select formControlName="useConsecutiveDays">
+                            @for (option of useConsecutiveDaysOptions(); track $index) {
+                              <mat-option [value]="option.value">{{
+                                option.descriptionKey | transloco
+                              }}</mat-option>
+                            }
+                          </mat-select>
+                        </mat-form-field>
+                        <i
+                          class="fa fa-question-circle tw-text-primary tw-text-xl tw-mb-5 tw-p-0.5"
+                          [matTooltip]="useConsecutiveDaysTooltip() | transloco"
+                          matTooltipPosition="right"
+                        ></i>
+                      </div>
+                    }
+                    @if (showLeaveMinDays()) {
+                      <mat-form-field>
+                        <mat-label>{{ 'leaves.fields.leaveMinDays' | transloco }}</mat-label>
+                        <input
+                          matInput
+                          type="number"
+                          formControlName="leaveMinDays"
+                          [min]="1"
+                          [max]="leaveMinDaysMax()"
+                        />
+                        <mat-error [hlFormErrors]="form.controls.leaveMinDays"></mat-error>
+                      </mat-form-field>
+                    }
+                    @if (showLeaveMaxDays()) {
+                      <mat-form-field>
+                        <mat-label>{{ 'leaves.fields.leaveMaxDays' | transloco }}</mat-label>
+                        <input
+                          matInput
+                          type="number"
+                          formControlName="leaveMaxDays"
+                          [min]="1"
+                          [max]="leaveMaxDaysMax()"
+                        />
+                        <mat-error [hlFormErrors]="form.controls.leaveMaxDays"></mat-error>
+                      </mat-form-field>
+                    }
+                    @if (showLeaveStartDay()) {
+                      <mat-form-field class="tw-w-48">
+                        <mat-label>{{ 'leaves.fields.leaveStartDay.label' | transloco }}</mat-label>
+                        <mat-select formControlName="leaveStartDay">
+                          @for (option of leaveStartDayOptions(); track $index) {
+                            <mat-option [value]="option.value">{{
+                              option.descriptionKey | transloco
+                            }}</mat-option>
+                          }
+                        </mat-select>
+                      </mat-form-field>
+                    }
+                    @if (showNextAbleDaySection() && showNextAbleDay()) {
+                      <mat-slide-toggle
+                        color="primary"
+                        formControlName="nextAbleDay"
+                        class="tw-mb-6"
+                      >
+                        {{ 'leaves.fields.nextAbleDay.label' | transloco }}
+                      </mat-slide-toggle>
+                    }
+                  </div>
+                </section>
+              }
+
+              <!-- Sección Flujo de aprobación -->
+              @if (sections().workflowApprove) {
+                <section class="tw-flex tw-flex-col tw-gap-2">
+                  <div class="tw-flex tw-items-center tw-gap-2">
+                    <mat-form-field class="tw-w-full tw-max-w-md">
+                      <mat-label>{{ 'leaves.fields.workflowApprove.label' | transloco }}</mat-label>
+                      <mat-select formControlName="workflowApproveId">
+                        @for (option of workflowApproveOptions(); track $index) {
+                          <mat-option [value]="option.value">{{
+                            option.descriptionKey | transloco
+                          }}</mat-option>
+                        }
+                      </mat-select>
+                    </mat-form-field>
+                    <i
+                      class="fa fa-question-circle tw-text-primary tw-text-xl tw-mb-5 tw-p-0.5"
+                      [matTooltip]="workflowApproveTooltip() | transloco"
+                      matTooltipPosition="right"
+                    ></i>
+                  </div>
+                </section>
+              }
+            </div>
+            @if (moreInformationItems().length > 0) {
+              <section>
+                <div class="hl-more-information-panel tw-px-8 tw-py-6 tw-text-default tw-mb-6">
+                  <div class="tw-mb-3 tw-flex tw-items-center tw-gap-3">
+                    <i
+                      class="fa fa-question-circle tw-text-xl tw-leading-none tw-text-primary"
+                      aria-hidden="true"
+                    ></i>
+                    <h2 class="tw-m-0 tw-text-sm tw-font-semibold tw-leading-5">
+                      {{ 'leaves.dialogLeaveTypeForm.sections.moreInformation' | transloco }}
+                    </h2>
+                  </div>
+                  <ul
+                    class="hl-more-information-list tw-m-0 tw-gap-1 tw-pl-10 tw-text-sm tw-font-normal tw-leading-5"
+                  >
+                    @for (itemKey of moreInformationItems(); track itemKey) {
+                      <li>{{ itemKey | transloco }}</li>
+                    }
+                  </ul>
+                </div>
+              </section>
+            }
+        </form>
+      }
+    }
+  </div>
+  <div
+    class="tw-flex tw-justify-end tw-gap-3 tw-py-6 tw-px-8 tw-border-t tw-shadow-md tw-shadow-black tw-border-neutral-100 dark:tw-border-gray-600 dark:tw-bg-[rgb(66,66,66)] tw-w-full"
+  >
+    @switch (currentStep()) {
+      @case ('selectionLeave') {
+        <button matButton="outlined" color="primary" class="hl-mat-button" (click)="onCloseClick()">
+          {{ t('cancel') }}
+        </button>
+        <button
+          matButton="filled"
+          color="primary"
+          class="hl-mat-button"
+          (click)="onContinueClick()"
+          [disabled]="!leaveType()"
+        >
+          {{ t('continue') }}
+        </button>
+      }
+      @case ('configuration') {
+        <button
+          matButton="outlined"
+          color="primary"
+          class="hl-mat-button"
+          (click)="leftActionIsBack ? onBackClick() : onCloseClick()"
+        >
+          {{ leftActionIsBack ? t('back') : t('cancel') }}
+        </button>
+        <button
+          matButton="filled"
+          color="primary"
+          class="hl-mat-button"
+          (click)="onSubmitClick()"
+          [disabled]="form.invalid || isLoading()"
+        >
+          {{ t('submit') }}
+        </button>
+      }
+    }
+  </div>
+</div>

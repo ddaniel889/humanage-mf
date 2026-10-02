@@ -1,0 +1,122 @@
+@use '@angular/material' as mat;
+
+:host {
+  @include mat.button-overrides(
+    (
+      outlined-container-shape: 40px,
+    )
+  );
+
+  line-height: normal;
+}
+
+.header {
+  h3 {
+    font-size: 1.17em;
+    font-weight: bold;
+    line-height: normal;
+  }
+
+  h5 {
+    font-size: 0.83em;
+    font-weight: 300;
+    line-height: normal;
+  }
+}
+
+h4 {
+  font-weight: 700;
+}
+
+@keyframes slideInFromRight {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+.new-detail-container {
+  opacity: 1;
+  animation: slideInFromRight 0.2s ease-out;
+}
+
+.invisible-item {
+  width: 0 !important;
+  overflow: hidden !important;
+  position: absolute !important;
+  left: -4px;
+  top: -12px;
+}
+
+mat-icon.mat-icon {
+  min-width: 40px;
+  height: unset;
+  font-size: 20px;
+}
+
+::ng-deep {
+  .filter-select-panel {
+    margin-left: -39px;
+    margin-top: 6px;
+  }
+}
+
+.helper {
+  display: grid;
+  grid-template-columns: 1fr auto auto;
+  align-items: center;
+  height: auto !important;
+
+  .helper-info {
+    grid-column: 1;
+  }
+
+  .helper-actions {
+    grid-column: 2;
+  }
+
+  .helper-pagination {
+    grid-column: 3;
+    display: flex;
+    justify-content: flex-end;
+  }
+}
+
+@media (max-width: 850px) {
+  .helper {
+    grid-template-columns: 1fr auto;
+
+    .helper-info {
+      grid-column: 1;
+      grid-row: 1;
+    }
+
+    .helper-actions {
+      grid-column: 2;
+      grid-row: 1;
+    }
+
+    .helper-pagination {
+      grid-column: 1 / -1;
+      grid-row: 2;
+    }
+  }
+}
+
+@media (max-width: 1300px) {
+  .filters-bar {
+    .mdc-button--outlined {
+      height: 40px !important;
+      min-width: 40px !important;
+      width: 40px !important;
+      overflow: hidden !important;
+      display: flex !important;
+      justify-content: flex-start !important;
+      padding: 14px;
+    }
+  }
+}

@@ -1,0 +1,25 @@
+/* You can add global styles to this file, and also import other style files */
+@use './styles/theming.scss';
+@use './styles/tailwind.scss';
+@use './styles/components/tables';
+@use './styles/components/cards';
+@use './styles/host-overrides.scss';
+@use './styles/components/buttons.scss';
+@use './styles/components/tooltips.scss';
+@use './styles/components/inputs.scss';
+@use './styles/components/mat-radio.scss';
+
+.mf-hl-tailwind-scope {
+  --mf-color-blue: var(--color-blue, #0b0278);
+  --mf-color-bg-blue: var(--color-bg-blue, #0c9dee33);
+  --mf-color-brown: var(--color-brown, #633000);
+  --mf-color-bg-brown: var(--color-bg-brown, #f2dbbf);
+  --mf-color-green: var(--color-green, #1a7802);
+  --mf-color-bg-green: var(--color-bg-green, #cff0d8);
+  --mf-color-orange: var(--color-orange, #cf6100);
+  --mf-color-bg-orange: var(--color-bg-orange, #ffd99c);
+  --mf-color-red: var(--color-red, #bc0404);
+  --mf-color-bg-red: var(--color-bg-red, #ffdfdf);
+  --mf-color-violet: var(--color-violet, #3d0063);
+  --mf-color-bg-violet: var(--color-bg-violet, #e2bdff);
+}

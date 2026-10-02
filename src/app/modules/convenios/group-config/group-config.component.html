@@ -1,0 +1,32 @@
+<div
+  class="tw-flex tw-flex-col tw-gap-6 tw-h-full tw-relative"
+  *transloco="let t; prefix: 'groupConfig.groupConfig'"
+>
+  <section id="header-section" class="tw-flex tw-flex-col tw-gap-2">
+    <h1 class="tw-text-2xl tw-font-bold">{{ t('title') }}</h1>
+  </section>
+
+  <section id="groups" class="tw-shrink-0">
+    <div>
+      <hl-group-list></hl-group-list>
+    </div>
+  </section>
+
+  <section
+    id="Empleados sin grupos"
+    class="tw-mb-4"
+    [class.tw-invisible]="
+      employeeCount() === 0 && !hasActiveEmployeeFilter() && !isEmployeeListLoading()
+    "
+  >
+    <hl-group-employee-list
+      [tooltip]="t('employeesWithoutGroupTooltip')"
+      [showSelection]="true"
+      [showActions]="true"
+      [isNoGroupList]="true"
+      [groupData]="groups()"
+      (employeeAssigned)="reloadGroupData()"
+      [heading]="t('employeesWithoutGroupHeading')"
+    ></hl-group-employee-list>
+  </section>
+</div>

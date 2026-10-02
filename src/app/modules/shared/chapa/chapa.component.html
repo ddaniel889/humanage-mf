@@ -1,0 +1,114 @@
+<!-- eslint-disable @angular-eslint/template/eqeqeq -->
+<div class="upload-warning tw-w-full">
+  <div [class]="className" class="tw-flex tw-flex-col tw-justify-center tw-items-center tw-w-full tw-h-full tw-gap-4">
+      <!--Detalle de la solicitud-->
+      <span class="tw-flex tw-flex-col tw-justify-center tw-items-center" *ngIf="isApprover">
+        <h3 style="color: black;margin-bottom: 35px;">{{leaveDetail.userName}}</h3>
+      </span>
+    <span class="tw-flex tw-flex-col tw-justify-center tw-items-center">
+      <h4 *ngIf="headerDraft && leaveRequestDraft" style="text-align:left;font-weight: bold;color: #0f0101; font-size: 30px;">{{headerDraft}}</h4>
+      <ng-container *ngIf="icon && icon.length > 0">
+        <mat-icon class="fa-lg large-icon" fontSet="fas" [fontIcon]="icon">
+        </mat-icon>
+      </ng-container>
+      <h2 *ngIf="text && !leaveRequestDraft" class="tw-font-bold tw-text-2xl">{{text}}</h2>
+      <h2 *ngIf="text && leaveRequestDraft" class="tw-font-bold tw-text-xl tw-text-[#8f8f8f]">{{text}}</h2>
+      <h4 *ngIf="subText && leaveRequestDraft && !isApprover" style="font-size: 30px;text-align:left;color: #0f0101;font-weight: bold;margin-top: 20px;">{{subText}}</h4>
+      <h4 *ngIf="textDraft && leaveRequestDraft && !isApprover" style="text-align:left;font-weight: bold;color:#798c92; font-size: 20px;">{{textDraft}}</h4>
+      <h4 *ngIf="subText && !leaveRequestDraft && isApprover && this.leaveDetail.state?.key != '2'" >{{subText}}</h4>
+      <h4 *ngIf="subText && !leaveRequestDraft && !isApprover" >{{subText}}</h4>
+      <h5 *ngIf="infoExtra">{{infoExtra}}</h5>
+    </span>
+    <!--Botón para Cancelar la solicitud-->
+    <button mat-raised-button (click)="click()" *ngIf="(actionText || actionIcon) && !isApprover && !leaveRequestDraft" [color]="buttonColor">
+      <div class="tw-flex tw-flex-row tw-justify-center tw-items-center tw-gap-2">
+        <mat-icon class="fa-lg tw-flex tw-flex-row tw-justify-center tw-items-center" fontSet="fa" [fontIcon]="actionIcon" *ngIf="actionIcon"></mat-icon>
+        <span *ngIf="actionText"> {{ actionText }} </span>
+      </div>
+    </button>
+    <div class="tw-flex tw-flex-row tw-justify-start tw-items-center tw-gap-4" *ngIf="leaveRequestDraft && !isApprover">
+      <!-- Agree Button -->
+      <button mat-raised-button color="accent" style="font-size: 24px; padding: 15px 20px; border: none; border-radius: 5px; cursor: pointer; margin-top: 20px;" (click)="approveReject(true)" >
+        <span class="tw-flex tw-flex-row tw-justify-center tw-items-center tw-gap-3">
+        <mat-icon fontSet="fas" fontIcon="fa-smile" style="font-size: 20px;"></mat-icon>
+        <span>Sí, estoy de acuerdo</span>
+        </span>
+      </button>
+      <button style="font-size: 16px; color: gray; text-decoration: underline; background: none; border: none; padding: 0; cursor: pointer;" (click)="approveReject(false)">
+        no lo estoy
+      </button>
+    </div>
+    <!--Botón para Aprobar o rechazar la solicitud por el validador-->
+    <div class="actions tw-flex tw-flex-row tw-justify-between tw-items-center" *ngIf="isApprover && !leaveRequestDraft && !isValidated && leaveDetail.state.key == '1'">
+      <button name="btn_RechazarSolicitud" mat-stroked-button class="not-ok tw-basis-1/2"
+      (click)="approveReject(false)">
+        <span class="tw-flex tw-flex-row tw-justify-center tw-items-center tw-gap-3">
+          <mat-icon fontSet="fas" fontIcon="fa-thumbs-down">
+          </mat-icon>
+          <span>
+            Rechazar Solicitud
+          </span>
+        </span>
+      </button>
+
+      <button name="btn_AprobarSolicitud" mat-raised-button class="ok tw-basis-1/2" (click)="approveReject(true)">
+        <span class="tw-flex tw-flex-row tw-justify-center tw-items-center tw-gap-3">
+          <mat-icon fontSet="fas" fontIcon="fa-thumbs-up">
+          </mat-icon>
+          <span>
+            Aprobar Solicitud
+          </span>
+        </span>
+      </button>
+    </div>
+    <div class="actions tw-flex tw-flex-row tw-justify-between tw-items-center" *ngIf="isApprover && !leaveRequestDraft && workflowApproveShow()">
+      <button name="btn_RechazarSolicitud" mat-stroked-button class="not-ok"
+      (click)="approveReject(false)">
+        <span class="tw-flex tw-flex-row tw-justify-center tw-items-center tw-gap-3">
+          <mat-icon fontSet="fas" fontIcon="fa-thumbs-down">
+          </mat-icon>
+          <span>
+            Rechazar Solicitud
+          </span>
+        </span>
+      </button>
+    </div>
+    <div class="main-action actions tw-flex tw-flex-row" *ngIf="!isApprover">
+      <button name="btn_ViewDocument" mat-raised-button class="main-btn tw-flex-1" color="accent" (click)="viewDocumentLeave()" *ngIf="hasDocument">
+        <span class="tw-flex tw-flex-row tw-justify-center tw-items-center tw-gap-3">
+          <mat-icon class="fa-lg" fontSet="fas" fontIcon="fa-file">
+          </mat-icon>
+          <span>
+            Ver Documento
+          </span>
+        </span>
+      </button>
+    </div>
+      <!--Detalle de las validaciones Realizadas-->
+      <mat-basic-chip *ngIf="!showActionRol() && isNotsameApprover() && !noteCancelation" matLine [ngClass]="getClass()" class="tw-flex tw-flex-row tw-flex-wrap tw-justify-center tw-items-center tw-gap-2">
+        <mat-icon  fontSet="fa"  [fontIcon]="getIcon()">
+        </mat-icon>
+        <span style="padding-right: 10px;">{{getDescriptionRol()}}</span>
+      </mat-basic-chip>
+      <mat-basic-chip
+        *ngIf="!showActionRol() && isNotsameApprover() && noteCancelation"
+        matLine
+        [ngClass]="getClass()"
+        class="tw-flex tw-flex-row tw-justify-center tw-items-center tw-gap-2"
+        style="align-items: center; justify-content: center;">
+      <span style="padding: 10px; text-align: center;">{{getDescriptionRol()}}</span>
+      </mat-basic-chip>
+      <mat-list-item class="mat-list-actionApprovers tw-flex tw-flex-row tw-gap-2" *ngFor="let action of leaveDetail.actionApprovers">
+          <mat-basic-chip *ngIf="action.action == 2" matLine class="signed-ok tw-flex tw-flex-row tw-flex-wrap tw-justify-center tw-items-center tw-gap-2">
+          <mat-icon  fontSet="fa" fontIcon="fa-smile">
+          </mat-icon>
+          <span style="padding-right: 10px;">Aprobado por {{action.firstName}} {{action.lastName}} el {{getDateTime(action.fecha)}}</span>
+          </mat-basic-chip>
+          <mat-basic-chip *ngIf="action.action == 3" matLine class="signed-not-ok tw-flex tw-flex-row tw-flex-wrap tw-justify-center tw-items-center tw-gap-2">
+            <mat-icon  fontSet="fa" fontIcon="fa-frown">
+            </mat-icon>
+            <span style="padding-right: 10px;">Rechazado por {{action.firstName}} {{action.lastName}} el {{getDateTime(action.fecha)}}</span>
+          </mat-basic-chip>
+      </mat-list-item>
+  </div>
+</div>

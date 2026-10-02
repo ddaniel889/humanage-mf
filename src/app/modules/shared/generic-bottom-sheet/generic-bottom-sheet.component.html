@@ -1,0 +1,140 @@
+<!-- eslint-disable @angular-eslint/template/eqeqeq -->
+<ng-container *transloco="let t; prefix: 'common.message-service'">
+<!-- TEXTAREA_YES_NO -->
+<div class="bottom_sheet-content tw-mt-4 tw-flex tw-flex-col tw-gap-4 tw-justify-center tw-items-stretch"
+  *ngIf="data?.type == 0">
+  <h3 *ngIf="data?.bodyText" class="tw-font-bold tw-text-base">{{data?.bodyText}}</h3>
+  <p *ngIf="data?.infoText">{{data?.infoText}} </p>
+  <mat-form-field *ngIf="data?.inputLabel">
+    <mat-label>{{data?.inputLabel}}</mat-label>
+    <textarea matTextareaAutosize matAutosizeMinRows="1" matAutosizeMaxRows="5" matInput maxlength="2000"
+      [placeholder]="data?.placeHolder" [(ngModel)]="textArea"></textarea>
+    <mat-hint *ngIf="textArea?.length < 1">{{data?.inputHint}}</mat-hint>
+  </mat-form-field>
+  <div class="tw-flex tw-flex-row-reverse tw-gap-3">
+    <button mat-raised-button (click)="action(true)" color="accent" class="btn">{{ t('yes') }}</button>
+    <button mat-button (click)="action(false)">{{ t('no') }}</button>
+  </div>
+</div>
+
+<!-- YES_NO -->
+<div class="bottom_sheet-content tw-mt-4 tw-flex tw-flex-col tw-gap-4 tw-justify-center tw-items-stretch"
+  *ngIf="data?.type == 1">
+  <h3 *ngIf="data?.bodyText" class="tw-font-bold tw-text-base">{{data?.bodyText}}</h3>
+  <p *ngIf="data?.infoText">{{data?.infoText}} </p>
+  <br>
+  <div class="tw-flex tw-flex-row-reverse tw-gap-3">
+    <button mat-raised-button (click)="action(true)" color="accent" class="btn">{{ t('yes') }}</button>
+    <button mat-button (click)="action(false)">{{ t('no') }}</button>
+  </div>
+</div>
+
+<!-- YES_NO_CANCELAR -->
+<div class="bottom_sheet-content tw-mt-4 tw-flex tw-flex-col tw-gap-4 tw-justify-center tw-items-stretch"
+  *ngIf="data?.type == 2">
+  <h3 *ngIf="data?.bodyText">{{data?.bodyText}}</h3>
+  <p *ngIf="data?.infoText">{{data?.infoText}} </p>
+  <br>
+  <div class="tw-flex tw-flex-row-reverse tw-gap-3">
+    <button mat-raised-button (click)="action(true)" color="accent" class="btn">{{ t('yes') }}</button>
+    <button mat-button (click)="action(false)">{{ t('no') }}</button>
+    <button mat-button (click)="action(null)">{{ t('cancel') }}</button>
+  </div>
+</div>
+
+<!-- OK_CANCELAR -->
+<div class="bottom_sheet-content tw-mt-4 tw-flex tw-flex-col tw-gap-4 tw-justify-center tw-items-stretch"
+  *ngIf="data?.type == 3">
+  <h3 *ngIf="data?.bodyText" class="tw-font-bold tw-text-base">{{data?.bodyText}}</h3>
+  <p *ngIf="data?.infoText">{{data?.infoText}} </p>
+  <br>
+  <div class="tw-flex tw-flex-row-reverse tw-gap-3">
+    <button mat-raised-button (click)="action(true)" color="accent" class="btn">{{ t('ok') }}</button>
+    <button mat-button (click)="action(null)">{{ t('cancel') }}</button>
+  </div>
+</div>
+
+<!-- PROBAR/RECHAZAR MOTIVO -->
+<div class="bottom_sheet-content tw-mt-4 tw-flex tw-flex-col tw-gap-4 tw-justify-center tw-items-stretch"
+  *ngIf="data?.type == 10" [ngClass]="data.approve ? 'ok':'not-ok'">
+  <div *ngIf="data?.bodyText" class="bottom_sheet-title tw-flex tw-flex-row tw-gap-4 tw-justify-start tw-items-center">
+    <mat-icon class="bottom_sheet-icon fa-solid" fontSet="fas"
+      [fontIcon]="data.approve ? 'fa-thumbs-up':'fa-thumbs-down'"></mat-icon>
+    <h3 class="tw-font-bold tw-text-base">
+      {{data?.bodyText}}
+    </h3>
+  </div>
+  <p *ngIf="data?.infoText">{{data?.infoText}}</p>
+  <mat-form-field *ngIf="data?.inputLabel && !data.approve" appearance="fill">
+    <mat-label>{{data?.inputLabel}}</mat-label>
+    <input type="text" matInput maxlength="2000" [(ngModel)]="textArea"/>
+  </mat-form-field>
+  <div class="tw-flex tw-flex-row-reverse tw-gap-3">
+    <button mat-raised-button class="bottom_sheet-main_btn" (click)="action(true)" [disabled]="disableButton() && !data.approve">{{data?.buttonText}}</button>
+    <button mat-button (click)="action(null)">{{ t('cancel') }}</button>
+  </div>
+</div>
+
+
+<!-- CANCELAR MOTIVO -->
+<div class="bottom_sheet-content tw-mt-4 tw-flex tw-flex-col tw-gap-4 tw-justify-center tw-items-stretch"
+  *ngIf="data?.type == 12" [ngClass]="'cancel'">
+  <div *ngIf="data?.bodyText" class="bottom_sheet-title tw-flex tw-flex-row tw-gap-4 tw-justify-start tw-items-center">
+    <mat-icon class="bottom_sheet-icon fa-solid" fontSet="fas"
+      [fontIcon]="'fa-times-circle'"></mat-icon>
+    <h3>
+      {{data?.bodyText}}
+    </h3>
+  </div>
+  <p *ngIf="data?.infoText">{{data?.infoText}}</p>
+  <mat-form-field *ngIf="data?.inputLabel" appearance="fill">
+    <mat-label>{{data?.inputLabel}}</mat-label>
+    <input data-testid="cancel-reason-input" type="text" matInput maxlength="2000" [(ngModel)]="textArea"/>
+  </mat-form-field>
+  <div class="tw-flex tw-flex-row-reverse tw-gap-3">
+    <button mat-raised-button class="bottom_sheet-main_btn" (click)="action(true)" [disabled]="disableButton()">{{data?.buttonText}}</button>
+    <button data-testid="accept-cancel-button" mat-button (click)="action(null)">{{ t('cancel') }}</button>
+  </div>
+</div>
+
+<!-- INFO -->
+<div class="bottom_sheet-content tw-mt-4 tw-flex tw-flex-col tw-gap-4 tw-justify-center tw-items-stretch"
+  *ngIf="data?.type == 4">
+  <h3 *ngIf="data?.bodyText">{{data?.bodyText}}</h3>
+  <p *ngIf="data?.infoText">{{data?.infoText}}</p>
+  <div class="tw-flex tw-flex-row-reverse tw-gap-3">
+    <button mat-raised-button (click)="action(null)" color="accent" class="btn">{{ t('understood') }}</button>
+  </div>
+</div>
+
+<!-- Spam_notification -->
+<div class="bottom_sheet-content tw-mt-4 tw-flex tw-flex-col tw-gap-4 tw-justify-center tw-items-stretch"
+  *ngIf="data?.type == 8">
+  <h3 *ngIf="data?.bodyText">{{data?.bodyText}}</h3>
+  <h4 *ngIf="data?.valueText" class="accent">{{data?.valueText}} </h4>
+  <p *ngIf="data?.infoText">{{data?.infoText}} </p>
+  <br>
+  <div class="tw-flex tw-flex-row-reverse tw-gap-3">
+    <button mat-raised-button (click)="action(true)" color="accent" class="btn">{{ t('send') }}</button>
+    <button mat-button (click)="action(null)">{{ t('cancel') }}</button>
+  </div>
+</div>
+
+<!-- ASSIGN MASSIVE TIMELINES -->
+<div class="bottom_sheet-content tw-mt-4 tw-flex tw-flex-col tw-gap-4 tw-justify-center tw-items-stretch" *ngIf="data?.type == 13">
+  <h3 *ngIf="data?.bodyText">{{data?.bodyText}}</h3>
+  <p *ngIf="data?.infoText">{{data?.infoText}}</p>
+  <br>
+  <mat-radio-group [(ngModel)]="selectedOption" class="tw-flex tw-flex-col">
+    <mat-radio-button class="tw-flex-1" value="all">{{data?.firstOption}}</mat-radio-button>
+    <br>
+    <mat-radio-button class="tw-flex-1" value="withoutValidity">{{data?.secondOption}}</mat-radio-button>
+  </mat-radio-group>
+  <br>
+
+  <div class="tw-flex tw-flex-row-reverse tw-gap-3">
+    <button mat-raised-button (click)="action(selectedOption)" color="accent" class="btn">{{ t('apply') }}</button>
+    <button mat-button (click)="action(null)">{{ t('cancel') }}</button>
+  </div>
+</div>
+</ng-container>

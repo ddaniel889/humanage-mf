@@ -1,0 +1,17 @@
+<mat-form-field class="mf-ou-form-field tw-w-80" *transloco="let t; prefix: 'common.ou-select'">
+  <mat-label>{{ t('label') }}</mat-label>
+  <mat-icon matIconPrefix class="fa-lg" fontSet="fas" fontIcon="fa-industry-alt"> </mat-icon>
+  <mat-select
+    #ouSelector
+    [value]="selectedOu()"
+    [hideSingleSelectionIndicator]="true"
+    [compareWith]="compareOu"
+    panelClass="mf-ou-select-panel"
+    (closed)="onSelectClose()"
+    (selectionChange)="onSelectOu($event)"
+  >
+    @for (ou of ous(); track ou.id) {
+      <mat-option [value]="ou"> {{ ou.name }}</mat-option>
+    }
+  </mat-select>
+</mat-form-field>

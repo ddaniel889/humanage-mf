@@ -1,0 +1,131 @@
+.new_leave_modal-toolbar {
+  padding: 16px;
+
+  h2,
+  h4,
+  h5,
+  h6 {
+    margin: 0;
+  }
+
+  h4,
+  h5,
+  h6 {
+    font-weight: normal;
+  }
+}
+
+.new_leave_modal-steps {
+  .mat-horizontal-content-container {
+    padding: 0;
+    display: flex;
+    justify-content: center;
+
+    form {
+      padding-top: 16px;
+
+      .new_leave_modal-options {
+        padding: 0 32px 32px;
+
+        mat-radio-button {
+          border-radius: 12px;
+          padding: 16px 32px 16px 16px;
+
+          &[disabled],
+          &[disabled] * {
+            cursor: not-allowed !important;
+            opacity: 0.75;
+          }
+
+          .mat-radio-label {
+            display: flex;
+            flex-direction: row-reverse;
+            justify-content: space-between;
+
+            .mat-radio-label-content {
+              width: 100%;
+              margin-right: 24px;
+              padding: 0;
+
+              .main-text {
+                margin: 0;
+              }
+
+              .side-text {
+                margin: 0;
+                font-size: 16px;
+
+                &.muted {
+                  margin: 0;
+                  margin-top: 8px;
+                  font-size: 12px;
+                }
+              }
+            }
+          }
+        }
+      }
+
+      mat-form-field {
+        &.new_leave_modal-field {
+          padding: 0 32px;
+          box-sizing: border-box;
+
+          .mat-form-field-infix {
+            display: flex;
+
+            mat-datepicker-toggle {
+              position: absolute;
+              right: 0;
+              bottom: 0.5em;
+            }
+          }
+        }
+      }
+
+      .new_leave_modal-resume_line {
+        padding: 0 32px;
+
+        .main {
+          font-size: 20px;
+        }
+
+        .side {
+          font-size: 12px;
+        }
+      }
+
+      .new_leave_modal-actions {
+        padding: 0 16px 16px;
+      }
+    }
+  }
+}
+
+:host-context(.dark) {
+  .mat-horizontal-stepper-wrapper,
+  mat-horizontal-stepper,
+  .mat-stepper-horizontal {
+    background-color: #505050 !important;
+  }
+}
+
+.info-container {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  padding: 0;
+  margin: 0 32px;
+
+  mat-icon {
+    min-width: 0;
+  }
+
+  .info-text {
+    font-size: 14px;
+    font-weight: 500;
+    font-style: italic;
+    @apply tw-text-default;
+  }
+}

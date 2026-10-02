@@ -1,0 +1,17 @@
+@use '@angular/material' as mat;
+
+:root {
+  .mf-hl-tailwind-scope {
+    @include mat.radio-overrides(
+      (
+        state-layer-size: 32px,
+      )
+    );
+
+    .mat-mdc-radio-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+  }
+}

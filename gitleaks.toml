@@ -1,0 +1,9 @@
+title = "gitleaks config"
+
+[allowlist]
+paths = [
+  "Fuentes/Cardinal.Auth/Cardinal.Auth.API/Web.config", 
+  "Fuentes/DAU/Cardinal.Auth.DAU/.*",                  
+]
+
+

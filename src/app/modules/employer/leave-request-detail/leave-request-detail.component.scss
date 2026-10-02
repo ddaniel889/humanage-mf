@@ -1,0 +1,38 @@
+.leave_detail-container-content {
+  .leave_resume {
+
+    .leave_resume-title {
+      padding: 0 16px;
+      margin: 0 0 16px;
+      font-weight: bold;
+    }
+
+    .line {
+      padding: 8px 16px;
+      position: relative;
+      border-radius: 4px;
+      width: 100%;
+
+      h3,
+      h4,
+      h6 {
+        margin: 0;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+
+      h3 {
+        font-weight: 700;
+        .line-side {
+          font-weight: 300;
+        }
+      }
+
+      h6 {
+        font-size: 12px;
+        line-height: 12px;
+        font-weight: 300;
+      }
+    }
+  }
+}

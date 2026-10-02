@@ -1,0 +1,20 @@
+.mf-hl-tailwind-scope {
+  mat-expansion-panel .mat-expansion-panel-content {
+    max-height: unset !important;
+  }
+
+  // Fix: misaligned icons in mat-icon-button
+  .mat-mdc-icon-button mat-icon.mat-icon {
+    min-width: unset;
+    height: unset;
+  }
+
+  // Restores browser-default heading styles for host components rendered inside
+  // the microfrontend, where Tailwind Preflight resets font-size and font-weight.
+  .legacy-leading-fix {
+    h1, h2, h3, h4, h5, h6 {
+      font-size: revert;
+      font-weight: revert;
+    }
+  }
+}

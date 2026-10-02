@@ -1,0 +1,340 @@
+<!-- eslint-disable @angular-eslint/template/click-events-have-key-events -->
+<!-- eslint-disable @angular-eslint/template/interactive-supports-focus -->
+<div class="tw-flex tw-h-full tw-relative">
+  <mat-toolbar class="mat-elevation-z1 app-toolbar" color="primary">
+    <mat-toolbar-row></mat-toolbar-row>
+    <mat-toolbar-row></mat-toolbar-row>
+  </mat-toolbar>
+
+  <mat-card class="tw-absolute tw-inset-0 sm:tw-inset-4 tw-overflow-hidden">
+    <div class="tw-flex tw-h-full tw-w-full">
+      <div class="tw-flex tw-flex-row tw-h-full tw-w-full">
+        <div class="inbox-container employee my-documents tw-h-full tw-w-full md:tw-w-[30%] tw-min-w-[350px]">
+          <mat-toolbar class="inbox-toolbar tw-flex tw-flex-row tw-items-center" color="grey">
+            <mat-toolbar-row class="tw-gap-2">
+              <div class="mat-avatar tw-flex tw-flex-row tw-justify-between tw-items-center tw-min-w-0 tw-flex-1">
+                <div class="toolbar-line tw-flex tw-flex-row tw-items-center tw-gap-4">
+                  <mat-icon class="fa-lg" fontSet="fa" fontIcon="fa-calendar-alt"> </mat-icon>
+                  <div class="title tw-flex tw-flex-col tw-justify-center tw-items-start">
+                    @if (!isApprover()) {
+                      <h3 data-testid="myleave-tab">Mis Licencias</h3>
+                    } @else {
+                      <h3>Licencias</h3>
+                    }
+                  </div>
+                </div>
+              </div>
+              @if (tabToApprover()) {
+                <div class="container-filter">
+                  <button
+                    matButton="outlined"
+                    color="primary"
+                    [disabled]="isLoading()"
+                    (click)="selectState.open()"
+                  >
+                    <mat-icon class="fa-lg" fontSet="fas" fontIcon="fa-filter"></mat-icon>
+                    <mat-select
+                      panelClass="filter-select-panel mf-hl-tailwind-scope"
+                      panelWidth="220px"
+                      #selectState
+                      [value]="selectedLeaveStateFind()"
+                      (selectionChange)="onLeaveStateChange($event.value)"
+                      [hideSingleSelectionIndicator]="true"
+                    >
+                      @for (state of statesFilters; track state.key) {
+                        <mat-option [value]="state.key">
+                          {{ state?.value }}
+                        </mat-option>
+                      }
+                    </mat-select>
+                  </button>
+                </div>
+              }
+              <button
+                mat-icon-button
+                (click)="refresh()"
+                [disabled]="isLoading()"
+                [routerLink]="['welcome']"
+              >
+                <mat-icon class="fa-lg" fontSet="fa" fontIcon="fa-redo"></mat-icon>
+              </button>
+            </mat-toolbar-row>
+          </mat-toolbar>
+          <mat-divider class="false-divider" [inset]="true"></mat-divider>
+          @if (isApprover()) {
+            <mat-tab-group
+              #tabGroup
+              mat-align-tabs="center"
+              class="leave-tabs tw-h-full tw-w-full"
+              (selectedTabChange)="onTabChange($event)"
+            >
+              @if (configLeaveEmployee().length) {
+                <mat-tab label="Personales">
+                  <div
+                    class="leave_container tw-flex tw-flex-col"
+                    [class]="selectedLeave() ? 'visible' : ''"
+                  >
+                    @if (isLoading()) {
+                      <div class="window-spinner">
+                        <mat-progress-spinner mode="indeterminate" color="primary">
+                        </mat-progress-spinner>
+                      </div>
+                    } @else if (leaveRequests().length < 1) {
+                      <app-chapa
+                        [className]="'info-empty'"
+                        [icon]="'fa-meh'"
+                        [text]="'Aún no has solicitado una licencia...'"
+                      >
+                      </app-chapa>
+                    } @else {
+                      <div class="leave_items tw-flex tw-flex-col tw-gap-4">
+                        @for (leave of leaveRequests(); track leave.id) {
+                          <span
+                            class="leave_items-item"
+                            [class]="getClassNameColor(leave.id)"
+                          >
+                            <div
+                              class="content mat-card mat-elevation-z2 tw-flex tw-flex-row tw-items-center"
+                              [class.selected]="leave?.id === selectedLeave()?.id"
+                              matRipple
+                              (click)="selectLeave(leave)"
+                            >
+                              <mat-icon
+                                class="leave_item-icon tw-flex tw-flex-row tw-justify-center tw-items-center"
+                                [class]="leave.loading ? 'fa-xs fa-spin' : 'fa-lg'"
+                                fontSet="fa"
+                                [fontIcon]="
+                                  leave.loading ? 'fa-spinner-third' : getTypeRequestIcon(leave.id)
+                                "
+                              >
+                              </mat-icon>
+                              <div class="item-data tw-flex tw-flex-col">
+                                <b
+                                  [title]="'Solicitud de ' + (getTypeRequestName(leave.id) | transloco)"
+                                  #listItem
+                                >
+                                  {{ 'Solicitud de ' + (getTypeRequestName(leave.id) | transloco) }}
+                                </b>
+                                <span>
+                                  {{
+                                    leave.daysConsumed +
+                                      ' días ' +
+                                      getName(leave.id) +
+                                      ' el ' +
+                                      (getDateRequets(leave.id) | date: 'dd/MM/yyyy')
+                                  }}
+                                </span>
+                              </div>
+                              <div
+                                class="leave_item-status_icon tw-flex tw-flex-row tw-justify-center tw-items-center tw-gap-1"
+                                [title]="getStatusName(leave.id)"
+                              >
+                                <mat-icon
+                                  fontSet="fa"
+                                  fontIcon="{{ getTypeRequestDetailIcon(leave.id) }}"
+                                ></mat-icon>
+                              </div>
+                            </div>
+                          </span>
+                        }
+                      </div>
+                    }
+                    <div class="main-action tw-flex tw-flex-row">
+                      <button
+                        data-testid="new-request-personal"
+                        mat-raised-button
+                        class="main-btn !tw-text-xl"
+                        color="accent"
+                        (click)="openAddRequestDialog()"
+                        [disabled]="isLoading() || disabled()"
+                      >
+                        <mat-icon fontSet="fas" fontIcon="fa-plus"> </mat-icon>
+                        Nueva Solicitud
+                      </button>
+                    </div>
+                  </div>
+                </mat-tab>
+              }
+              @if (useWorkflowApprove()) {
+                <mat-tab label="Mi Equipo">
+                  <div
+                    class="leave_container tw-flex tw-flex-col"
+                    [class]="selectedLeave() ? 'visible' : ''"
+                    style="height: 90% !important"
+                  >
+                    @if (isLoading()) {
+                      <div class="window-spinner">
+                        <mat-progress-spinner mode="indeterminate" color="primary">
+                        </mat-progress-spinner>
+                      </div>
+                    } @else {
+                      @if (leaveRequestsToApprover().length < 1) {
+                        <app-chapa
+                          [className]="'info-empty'"
+                          [icon]="'fa-meh'"
+                          [text]="getTextChapa(selectedLeaveStateFind())"
+                        >
+                        </app-chapa>
+                      } @else {
+                        <div class="leave_items tw-flex tw-flex-col tw-gap-4">
+                          @for (leaveToApprover of leaveRequestsToApprover(); track leaveToApprover.id) {
+                            <span
+                              class="leave_items-item"
+                              [class]="getClassNameColor(leaveToApprover.id)"
+                            >
+                              <div
+                                class="content mat-card mat-elevation-z2 tw-flex tw-flex-row tw-items-center"
+                                [class.selected]="leaveToApprover?.id === selectedLeave()?.id"
+                                matRipple
+                                (click)="selectLeave(leaveToApprover)"
+                              >
+                                <mat-icon
+                                  class="leave_item-icon tw-flex tw-flex-row tw-justify-center tw-items-center"
+                                  [class]="leaveToApprover.loading ? 'fa-xs fa-spin' : 'fa-lg'"
+                                  fontSet="fa"
+                                  [fontIcon]="
+                                    leaveToApprover.loading
+                                      ? 'fa-spinner-third'
+                                      : getTypeRequestIcon(leaveToApprover.id)
+                                  "
+                                >
+                                </mat-icon>
+                                <div class="item-data tw-flex tw-flex-col">
+                                  <b
+                                    [title]="
+                                      'Solicitud de ' +
+                                      (getTypeRequestName(leaveToApprover.id) | transloco)
+                                    "
+                                    #listItem
+                                  >
+                                    {{
+                                      'Solicitud de ' +
+                                        (getTypeRequestName(leaveToApprover.id) | transloco)
+                                    }}
+                                  </b>
+                                  <span
+                                    >{{ leaveToApprover.userName }} :
+                                    {{
+                                      leaveToApprover.daysConsumed +
+                                        ' días solicitados el ' +
+                                        (getDateRequets(leaveToApprover.id) | date: 'dd/MM/yyyy')
+                                    }}
+                                  </span>
+                                </div>
+                                <div
+                                  class="leave_item-status_icon tw-flex tw-flex-row tw-justify-center tw-items-center tw-gap-1"
+                                  [title]="getStatusName(leaveToApprover.id)"
+                                >
+                                  <mat-icon
+                                    fontSet="fa"
+                                    fontIcon="{{ getTypeRequestDetailIcon(leaveToApprover.id) }}"
+                                  ></mat-icon>
+                                </div>
+                              </div>
+                            </span>
+                          }
+                        </div>
+                      }
+                      <div class="main-action tw-flex tw-flex-row">
+                        <app-cs-paginator
+                          class="tw-h-full tw-w-full tw-flex tw-justify-center tw-items-center"
+                          [hidden]="leaveRequestsToApprover().length === 0"
+                          [pageCount]="itemsCount()"
+                          [pageIndex]="pageIndex()"
+                          (pageIndexChange)="pageIndex.set($event)"
+                          (pageChanged)="selectedPageChanged($event)"
+                        >
+                        </app-cs-paginator>
+                      </div>
+                    }
+                  </div>
+                </mat-tab>
+              }
+            </mat-tab-group>
+          }
+          <div class="leave_container tw-flex tw-flex-col" [class]="selectedLeave() ? 'visible' : ''">
+            @if (isLoading()) {
+              <div class="window-spinner">
+                <mat-progress-spinner mode="indeterminate" color="primary"> </mat-progress-spinner>
+              </div>
+            } @else if (leaveRequests().length < 1) {
+              <app-chapa
+                [className]="'info-empty'"
+                [icon]="'fa-meh'"
+                [text]="'Aún no has solicitado una licencia...'"
+              >
+              </app-chapa>
+            } @else {
+              <div class="leave_items tw-flex tw-flex-col tw-gap-4">
+                @for (leave of leaveRequests(); track leave.id) {
+                  <span
+                    class="leave_items-item"
+                    [class]="getClassNameColor(leave.id)"
+                  >
+                    <div
+                      class="content mat-card mat-elevation-z2 tw-flex tw-flex-row tw-items-center"
+                      [class.selected]="leave?.id === selectedLeave()?.id"
+                      matRipple
+                      (click)="selectLeave(leave)"
+                    >
+                      <mat-icon
+                        class="leave_item-icon tw-flex tw-flex-row tw-justify-center tw-items-center"
+                        [class]="leave.loading ? 'fa-xs fa-spin' : 'fa-lg'"
+                        fontSet="fa"
+                        [fontIcon]="leave.loading ? 'fa-spinner-third' : getTypeRequestIcon(leave.id)"
+                      >
+                      </mat-icon>
+                      <div class="item-data tw-flex tw-flex-col">
+                        <b
+                          [title]="'Solicitud de ' + (getTypeRequestName(leave.id) | transloco)"
+                          #listItem
+                        >
+                          {{ 'Solicitud de ' + (getTypeRequestName(leave.id) | transloco) }}
+                        </b>
+                        <span
+                          >{{
+                            leave.daysConsumed +
+                              ' días ' +
+                              getTypeLeave(leave.id) +
+                              '  el ' +
+                              (getDateRequets(leave.id) | date: 'dd/MM/yyyy')
+                          }}
+                        </span>
+                      </div>
+                      <div
+                        class="leave_item-status_icon tw-flex tw-flex-row tw-justify-center tw-items-center tw-gap-1"
+                        [title]="getStatusName(leave.id)"
+                      >
+                        <mat-icon
+                          fontSet="fa"
+                          fontIcon="{{ getTypeRequestDetailIcon(leave.id) }}"
+                        ></mat-icon>
+                      </div>
+                    </div>
+                  </span>
+                }
+              </div>
+            }
+            <div class="main-action tw-flex tw-flex-row">
+              <button
+                data-testid="new-request-empty"
+                mat-raised-button
+                class="main-btn !tw-text-xl"
+                color="accent"
+                (click)="openAddRequestDialog()"
+                [disabled]="isLoading() || disabled()"
+              >
+                <mat-icon fontSet="fas" fontIcon="fa-plus"> </mat-icon>
+                Nueva Solicitud
+              </button>
+            </div>
+          </div>
+        </div>
+        <mat-divider [vertical]="true"></mat-divider>
+        <div class="detail tw-h-full tw-w-full md:tw-w-[70%]">
+          <router-outlet (activate)="reloadLeaves($event)"> </router-outlet>
+        </div>
+      </div>
+    </div>
+  </mat-card>
+</div>

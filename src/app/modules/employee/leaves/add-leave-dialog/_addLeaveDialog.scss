@@ -1,0 +1,37 @@
+// TODO: migrar mixin addLeaveDialog($accent, $text-main, $text-side, $text-disabled, $divider, $bg-background) desde _addLeaveDialog.scss
+@mixin addLeaveDialog($accent, $text-main, $text-side, $text-disabled, $divider, $bg-background) {
+  .new_leave_modal-steps {
+    display: unset !important;
+    .mat-horizontal-content-container {
+      form {
+        .new_leave_modal-options {
+          mat-radio-button {
+            background: $bg-background;
+            border: 1px solid $divider;
+
+            .mat-radio-label {
+              .mat-radio-label-content {
+
+                .side-text {
+                  color: $text-side;
+
+                  &.muted {
+                    color: $text-disabled;
+                  }
+                }
+
+                .accent {
+
+                  mat-icon,
+                  .main-text {
+                    color: $accent;
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

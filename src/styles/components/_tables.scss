@@ -1,0 +1,49 @@
+// Reusable table styles
+
+@layer components {
+  mf-hl-root,
+  .mf-hl-tailwind-scope {
+    .hl-table {
+      @apply tw-rounded-[10px] tw-border tw-border-default/10 tw-overflow-x-auto;
+
+      table {
+        @apply tw-max-w-full;
+      }
+
+      th {
+        @apply tw-font-bold tw-text-sm tw-py-3.5 tw-px-6;
+      }
+
+      td {
+        @apply tw-font-medium tw-text-sm tw-py-3.5 tw-px-6;
+      }
+
+      .hl-action-header-row {
+        @apply tw-bg-default/10 tw-py-3 tw-px-6;
+      }
+
+      // Material header row
+      .mat-mdc-header-row {
+        @apply tw-bg-default/5 tw-h-auto;
+      }
+
+      // Material table rows
+      .mat-mdc-row {
+        @apply tw-h-auto;
+      }
+
+      // Action column (optional)
+      .hl-actions-cell {
+        @apply tw-py-0.5 tw-px-1 tw-text-right;
+      }
+
+      .hl-checkbox-cell {
+        @apply tw-py-0 tw-px-3;
+      }
+
+      mat-paginator {
+        @apply tw-h-auto tw-text-xs tw-bg-default/5 tw-text-default/60;
+      }
+    }
+  }
+}

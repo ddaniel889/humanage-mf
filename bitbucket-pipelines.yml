@@ -1,0 +1,352 @@
+# This is an example Starter pipeline configuration
+# Use a skeleton to build, test and deploy using manual and parallel steps
+# -----
+# You can specify a custom docker image from Docker Hub as your build environment.
+
+image: atlassian/default-image:latest
+
+clone:
+  depth: full
+definitions:
+  caches:
+    sonar: ~/.sonar/cache  # Caching SonarCloud artifacts will speed up your build
+  steps:
+    - step: &set-semantic-version
+        name: Set Semantic Version
+        max-time: 2
+        script:
+          - export RELEASE_NAME=Balder2
+          - export PATCH_VALUE=$(( ${BITBUCKET_BUILD_NUMBER} / 65000 ))
+          - export REVISION_VALUE=$(( ${BITBUCKET_BUILD_NUMBER} % 65000 ))
+          - export NOW=$(date +'%y%m.%d')
+          - export SEMANTIC_VERSION=$(date +'%y%m.%d').$REVISION_VALUE.$PATCH_VALUE
+          - export RELEASE_METADATA=$(cat release_metadata.txt)
+          - export BUILD_METADATA=$(cat build_metadata.txt)
+          - export SEMANTIC_VERSION_FULL=$SEMANTIC_VERSION${RELEASE_METADATA}+$BITBUCKET_COMMIT
+          - echo $RELEASE_NAME >> "release_name.txt"
+          - echo $SEMANTIC_VERSION >> "version.txt"
+          - echo $SEMANTIC_VERSION_FULL >> "version_full.txt"
+          - echo "NOW='$NOW'"
+          - echo "ReleaseName='$RELEASE_NAME'"
+          - echo "ReleasMetadata='$RELEASE_METADATA'"
+          - echo "BuildMetadata='$BUILD_METADATA'"
+          - echo "SemVersion='$SEMANTIC_VERSION'"
+          - echo "SemVersion='$SEMANTIC_VERSION_FULL'"
+        services:
+          - docker
+        artifacts:
+          - "release_name.txt"
+          - version.txt
+          - version_full.txt
+    - step: &bitbucket-build-statistics
+        name: Bitbucket Build Statistics
+        max-time: 10
+        script:
+          - pipe: atlassian/bitbucket-build-statistics:1.5.4
+            variables:
+              BITBUCKET_USERNAME: $BITBUCKET_USERNAME
+              BITBUCKET_APP_PASSWORD: $BITBUCKET_APP_PASSWORD
+              WORKSPACE: 'cardinalproductteam'
+              FILENAME: "build-usage-bp-${BITBUCKET_BUILD_NUMBER}.txt"
+        artifacts:
+          - "build-usage-bp-${BITBUCKET_BUILD_NUMBER}.txt"
+    - step: &security-scan
+        name: "Security Scan"
+        size: 8x
+        max-time: 120
+        image: node:lts-alpine
+        caches:
+          - node
+          - sonar
+        script:
+          - export SEMANTIC_VERSION=$(cat version.txt)
+          - |
+           if [ "$SEMANTIC_VERSION" = "" ]; then
+             export SEMANTIC_VERSION=0.0.0.1
+           fi
+          - export SEMANTIC_VERSION_FULL=$SEMANTIC_VERSION+$BITBUCKET_COMMIT
+          - echo "SemVersion='$SEMANTIC_VERSION'"
+          - echo "SemVersion='$SEMANTIC_VERSION_FULL'"
+          - npm install --quiet
+          - pipe: atlassian/git-secrets-scan:3.2.0
+            variables:
+              GITLEAKS_EXTRA_ARGS:
+                - "--config=gitleaks.toml"
+                - "--report-format=json"
+          - pipe: snyk/snyk-scan:1.0.2
+            variables:
+              SNYK_TOKEN: $SNYK_API_TOKEN
+              LANGUAGE: "nuget" # Required unless SNYK_TEST_JSON_INPUT is set
+              CODE_INSIGHTS_RESULTS: "true" # Optional.
+              DONT_BREAK_BUILD: "true" # Optional.
+              DEBUG: "false"
+          - pipe: sonarsource/sonarcloud-scan:4.1.0
+            variables:
+              SONAR_TOKEN: ${SONAR_TOKEN}
+              SONAR_SCANNER_OPTS: -Xmx4096m
+          - pipe: sonarsource/sonarcloud-quality-gate:0.2.0
+            variables:
+              SONAR_TOKEN: ${SONAR_TOKEN}
+        services: [docker-with-large-memory]
+    - step: &tag-repository
+        name: Tag Repository
+        max-time: 10
+        script:
+          - export SEMANTIC_VERSION=$(cat version.txt)
+          - export SEMANTIC_VERSION_FULL=$SEMANTIC_VERSION+$BITBUCKET_COMMIT
+          - echo "SemVersion='$SEMANTIC_VERSION'"
+          - echo "SemVersion='$SEMANTIC_VERSION_FULL'"
+          - echo "Tag Repository for Build ${BITBUCKET_BUILD_NUMBER}"
+          - echo "$SEMANTIC_VERSION" >> semantic_version.txt
+          - git add semantic_version.txt
+          - git tag -m "Tagging for build ${BITBUCKET_BUILD_NUMBER} SemVer ${SEMANTIC_VERSION}" -a "${SEMANTIC_VERSION}-bp"
+          - git push origin ${SEMANTIC_VERSION}-bp
+    - step: &upload-file-bitbucket
+        name: Upload File Bitbucket
+        max-time: 10
+        script:
+        - pipe: atlassian/bitbucket-upload-file:0.7.5
+          variables:
+            FILENAME: '*.zip'
+            BITBUCKET_ACCESS_TOKEN: $BITBUCKET_ACCESS_TOKEN
+            DEBUG: 'true' # Optional
+    - step: &build-test
+        name: "Build and Test"
+        size: 8x
+        max-time: 20
+        image: node:22-alpine
+        script:
+          - export BUILD_CONFIG=$(cat build_config.txt)
+          - export SEMANTIC_VERSION=$(cat version.txt)
+          - export RELEASE_METADATA=$(cat release_metadata.txt)
+          - |
+           if [ "$SEMANTIC_VERSION" = "" ]; then
+             export SEMANTIC_VERSION=0.0.0.1
+           fi
+          - export SEMANTIC_VERSION_FULL=$SEMANTIC_VERSION+$BITBUCKET_COMMIT
+          - export SEMANTIC_VERSION_FULL_CONTANIER=$SEMANTIC_VERSION$RELEASE_METADATA
+          - echo "SemVersion='$SEMANTIC_VERSION'"
+          - echo "SemVersion='$SEMANTIC_VERSION_FULL'"
+          - echo "BuildConfig='$BUILD_CONFIG'"
+          - export ARTIFACT_NAME="humanage-leaves-$SEMANTIC_VERSION_FULL_CONTANIER.zip"
+          - echo "ARTIFACT_NAME='$ARTIFACT_NAME'"
+          - apk update
+          - apk add zip
+          - |
+            case "$BITBUCKET_BRANCH" in
+              "develop" | feature/*)
+                echo "Create build for Infra for develop"
+                export API_CPP_URL=$API_CPP_INFRA
+                export API_EDR_URL=$API_EDR_INFRA
+                export API_WF_URL=$API_WF_INFRA
+                export CLIENT_NAME=$CLIENT_NAME
+                export APPLICATION_CODE=$APPLICATION_CODE
+                export APPLICATION_ID=$APPLICATION_ID
+                export NOVELTIESDAYRANGE=$NOVELTIESDAYRANGE_INFRA
+                export BASE_URL=$BASE_URL_INFRA
+                ;;
+              release/*)
+                echo "Create build for QA"
+                # todo: set variables for QA
+                ;;
+              "master")
+                echo "Create build for Prod"
+                # todo: set variables for Prod
+                ;;
+            esac
+          - sed -i "s|{APIURLS_CPP}|$API_CPP_URL|g" src/environments/environment.ts
+          - sed -i "s|{APIURLS_EDR}|$API_EDR_URL|g" src/environments/environment.ts
+          - sed -i "s|{APIURLS_WF}|$API_WF_URL|g" src/environments/environment.ts
+          - sed -i "s|{CLIENT_NAME}|$CLIENT_NAME|g" src/environments/environment.ts
+          - sed -i "s|{SEMANTIC_VERSION}|$MF_LEAVES_VERSION|g" src/environments/environment.ts
+          - sed -i "s|{APPLICATION_CODE}|$APPLICATION_CODE|g" src/environments/environment.ts
+          - sed -i "s|{APPLICATION_ID}|$APPLICATION_ID|g" src/environments/environment.ts
+          - sed -i "s|{noveltiesDayRange}|$NOVELTIESDAYRANGE|g" src/environments/environment.ts
+          - sed -i "s|{BASE_URL}|$BASE_URL|g" src/environments/environment.ts
+          - cat src/environments/environment.ts
+          - npm ci && npm cache clean --force
+          - npm run build
+          - cd ./dist/humanage-leaves
+          - sed -i "s|{MF_LEAVES_VERSION}|$SEMANTIC_VERSION|g" version.json
+          - zip -rv ../../$ARTIFACT_NAME .
+          - cd ../../
+          - test -f $ARTIFACT_NAME
+          - pipe: atlassian/bitbucket-upload-file:0.7.5
+            variables:
+                FILENAME: '$ARTIFACT_NAME'
+                BITBUCKET_ACCESS_TOKEN: $BITBUCKET_ACCESS_TOKEN
+                DEBUG: 'true' # Optional
+        artifacts:
+          - "*.zip"
+    - step: &deploy
+        name: "Deploy to Environment"
+        deployment: DEV
+        size: 8x
+        max-time: 20
+        image: node:22-alpine
+        script:
+          - export BUILD_CONFIG=$(cat build_config.txt)
+          - export SEMANTIC_VERSION=$(cat version.txt)
+          - export RELEASE_METADATA=$(cat release_metadata.txt)
+          - |
+           if [ "$SEMANTIC_VERSION" = "" ]; then
+             export SEMANTIC_VERSION=0.0.0.1
+           fi
+          - export SEMANTIC_VERSION_FULL=$SEMANTIC_VERSION+$BITBUCKET_COMMIT
+          - export SEMANTIC_VERSION_FULL_CONTANIER=$SEMANTIC_VERSION$RELEASE_METADATA
+          - echo "SemVersion='$SEMANTIC_VERSION'"
+          - echo "SemVersion='$SEMANTIC_VERSION_FULL'"
+          - echo "BuildConfig='$BUILD_CONFIG'"
+          - export ARTIFACT_NAME="humanage-leaves-$SEMANTIC_VERSION_FULL_CONTANIER.zip"
+          - echo "ARTIFACT_NAME='$ARTIFACT_NAME'"
+          - echo "AZURE_APP_NAME='$AZURE_APP_NAME'"
+          - echo "AZURE_RESOURCE_GROUP='$AZURE_RESOURCE_GROUP'"
+          - echo "AZURE_APP_USE_SLOT='$AZURE_APP_USE_SLOT'"
+          - echo "AZURE_APP_SLOT_NAME='$AZURE_APP_SLOT_NAME'"
+          - test -f $ARTIFACT_NAME
+          - pipe: atlassian/azure-cli-run:1.2.4
+            variables:
+              AZURE_APP_ID: $AZURE_APP_ID
+              AZURE_PASSWORD: $AZURE_PASSWORD
+              AZURE_TENANT_ID: $AZURE_TENANT_ID
+              CLI_COMMAND: 'az webapp deploy --name $AZURE_APP_NAME --resource-group $AZURE_RESOURCE_GROUP --src-path $ARTIFACT_NAME --type zip --restart true --clean true'
+              DEBUG: 'true' # Optional
+          - pipe: atlassian/azure-cli-run:1.2.4
+            variables:
+                AZURE_APP_ID: $AZURE_APP_ID
+                AZURE_PASSWORD: $AZURE_PASSWORD
+                AZURE_TENANT_ID: $AZURE_TENANT_ID
+                CLI_COMMAND: 'az webapp config appsettings set --name $AZURE_APP_NAME --resource-group $AZURE_RESOURCE_GROUP --settings VERSION=$SEMANTIC_VERSION_FULL'
+                DEBUG: "true" # Optional
+  services:
+    docker-with-large-memory:
+      memory: 6144
+      type: docker
+
+options:
+  max-time: 20
+
+
+pipelines:
+  branches:
+    develop:
+      - step:
+          name: Set Variables
+          script:
+            - echo "DEBUG" >> build_config.txt
+            - echo "-beta" >> release_metadata.txt
+            - echo "$BITBUCKET_BRANCH" >> build_metadata.txt
+            - echo "development" >> deploy_env.txt
+            - echo "dev" >> container_tag.txt
+          artifacts:
+            - build_config.txt
+            - release_metadata.txt
+            - build_metadata.txt
+            - deploy_env.txt
+            - container_tag.txt
+      - step: *set-semantic-version
+      - parallel:
+        - step: *build-test
+        - step: *security-scan
+      - step:
+          <<: *deploy
+          name: Deployment to Infra WebApps
+          deployment: infra
+      - step: *tag-repository
+    release/*:
+      - step:
+          name: Set Variables
+          script:
+            - echo "DEBUG" >> build_config.txt
+            - echo "-beta" >> release_metadata.txt
+            - echo "$BITBUCKET_BRANCH" >> build_metadata.txt
+            - echo "development" >> deploy_env.txt
+            - echo "dev" >> container_tag.txt
+          artifacts:
+            - build_config.txt
+            - release_metadata.txt
+            - build_metadata.txt
+            - deploy_env.txt
+            - container_tag.txt
+      - step: *set-semantic-version
+      - step: *security-scan
+      - step: *tag-repository
+      - step:
+        <<: *deploy
+        name: Deploy to QA Enviroment
+        deployment: qa
+    master:
+      - step:
+          name: Set Variables
+          script:
+            - echo "DEBUG" >> build_config.txt
+            - echo "-beta" >> release_metadata.txt
+            - echo "$BITBUCKET_BRANCH" >> build_metadata.txt
+            - echo "development" >> deploy_env.txt
+            - echo "dev" >> container_tag.txt
+          artifacts:
+            - build_config.txt
+            - release_metadata.txt
+            - build_metadata.txt
+            - deploy_env.txt
+            - container_tag.txt
+      - step: *set-semantic-version
+      - step: *security-scan
+      - step: *tag-repository
+  pull-requests:
+    feature/*:
+      - step:
+          name: Set Variables
+          script:
+            - echo "DEBUG" >> build_config.txt
+            - echo "-beta" >> release_metadata.txt
+            - echo "$BITBUCKET_BRANCH" >> build_metadata.txt
+            - echo "development" >> deploy_env.txt
+            - echo "dev" >> container_tag.txt
+          artifacts:
+            - build_config.txt
+            - release_metadata.txt
+            - build_metadata.txt
+            - deploy_env.txt
+            - container_tag.txt
+      - step: *set-semantic-version
+      - parallel:
+        - step: *build-test
+        - step: *security-scan
+      - step: *tag-repository
+    hotfix/*:
+      - step:
+          name: Set Variables
+          script:
+            - echo "DEBUG" >> build_config.txt
+            - echo "-beta" >> release_metadata.txt
+            - echo "$BITBUCKET_BRANCH" >> build_metadata.txt
+            - echo "development" >> deploy_env.txt
+            - echo "dev" >> container_tag.txt
+          artifacts:
+            - build_config.txt
+            - release_metadata.txt
+            - build_metadata.txt
+            - deploy_env.txt
+            - container_tag.txt
+      - step: *set-semantic-version
+      - step: *security-scan
+      - step: *tag-repository
+    bugfix/*:
+      - step:
+          name: Set Variables
+          script:
+            - echo "DEBUG" >> build_config.txt
+            - echo "-beta" >> release_metadata.txt
+            - echo "$BITBUCKET_BRANCH" >> build_metadata.txt
+            - echo "development" >> deploy_env.txt
+            - echo "dev" >> container_tag.txt
+          artifacts:
+            - build_config.txt
+            - release_metadata.txt
+            - build_metadata.txt
+            - deploy_env.txt
+            - container_tag.txt
+      - step: *set-semantic-version
+      - step: *security-scan
+      - step: *tag-repository

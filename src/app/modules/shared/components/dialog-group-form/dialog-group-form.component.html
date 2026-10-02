@@ -1,0 +1,72 @@
+<div
+  class="tw-flex tw-flex-col tw-h-full tw-bg-white dark:tw-bg-[rgb(80,80,80)] tw-p-8"
+  *transloco="let t; prefix: 'groupConfig.dialogGroupForm'"
+>
+  <div class="tw-flex tw-justify-end tw-items-center tw-mb-2">
+    <button (click)="onCloseClick()">
+      <i class="fa fa-times tw-size-6 tw-text-2xl tw-text-primary" aria-hidden="true"></i>
+    </button>
+  </div>
+
+  <div class="tw-w-full tw-flex tw-justify-center">
+    <form [formGroup]="form" class="tw-flex tw-flex-col tw-flex-1 tw-max-w-lg">
+      <h1 class="tw-font-bold tw-text-primary tw-text-[28px] tw-mb-6">
+        {{ isEditMode ? t('editTitle') : t('createTitle') }}
+      </h1>
+      <div class="tw-flex tw-flex-col tw-gap-1">
+        <mat-form-field>
+          <mat-label>{{ t('form.name.label') }}</mat-label>
+          <input matInput formControlName="name" [placeholder]="t('form.name.placeholder')" />
+          @if (form.get('name')?.hasError('required')) {
+            <mat-error>{{ t('form.name.required') }}</mat-error>
+          } @else if (form.get('name')?.hasError('maxlength')) {
+            <mat-error>{{ t('form.name.maxlength') }}</mat-error>
+          }
+        </mat-form-field>
+
+        <mat-form-field [hideRequiredMarker]="true">
+          <mat-label>{{ t('form.description.label') }}</mat-label>
+          <input
+            matInput
+            formControlName="description"
+            [placeholder]="t('form.description.placeholder')"
+          />
+          @if (form.get('description')?.hasError('required')) {
+            <mat-error>{{ t('form.description.required') }}</mat-error>
+          } @else if (form.get('description')?.hasError('maxlength')) {
+            <mat-error>{{ t('form.description.maxlength') }}</mat-error>
+          }
+        </mat-form-field>
+
+        <mat-form-field>
+          <mat-label>{{ t('form.codeCct.label') }}</mat-label>
+          <input matInput formControlName="codeCct" [placeholder]="t('form.codeCct.placeholder')" />
+          @if (form.get('codeCct')?.hasError('maxlength')) {
+            <mat-error>{{ t('form.codeCct.maxlength') }}</mat-error>
+          }
+        </mat-form-field>
+      </div>
+    </form>
+  </div>
+  <div
+    class="tw-flex tw-justify-end tw-gap-3 tw-py-6 tw-px-8 tw-border-t tw-shadow-md tw-shadow-black tw-border-neutral-100 dark:tw-border-gray-600 dark:tw-bg-[rgb(80,80,80)] tw-absolute tw-bottom-0 tw-right-0 tw-w-full"
+  >
+    <button matButton="outlined" color="primary" class="hl-mat-button" (click)="onCloseClick()">
+      {{ t('cancel') }}
+    </button>
+
+    <button
+      matButton="filled"
+      color="primary"
+      class="hl-mat-button"
+      (click)="onSubmitClick()"
+      [disabled]="form.invalid || isLoading()"
+    >
+      @if (isLoading()) {
+        <i class="fa fa-spinner fa-spin"></i>
+      } @else {
+        {{ isEditMode ? t('editSubmit') : t('createSubmit') }}
+      }
+    </button>
+  </div>
+</div>

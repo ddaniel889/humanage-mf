@@ -1,0 +1,270 @@
+// TODO(ECM-12229): archivo de referencia para la migración. NO importar aún — contiene estilos legacy globales que deben revisarse y encapsularse correctamente a medida que avanza la migración. Incluye @mixin para theming.
+
+.container-filter {
+  text-align: right !important;
+  flex-direction: row !important;
+  box-sizing: border-box !important;
+  display: flex !important;
+  place-content: stretch flex-end !important;
+}
+.filter-state {
+  border-radius: 20px !important;
+  display: inline-flex !important;
+  width: 250px !important;
+  text-align: right !important;
+}
+
+.filter-state-small {
+  border-radius: 20px !important;
+  display: inline-flex !important;
+  width: 180px !important;
+  text-align: right !important;
+}
+
+.filter-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+  max-width: 100%;
+}
+
+.inbox-toolbar .container-filter > button {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+}
+
+:host ::ng-deep .inbox-toolbar .container-filter > button .mat-mdc-select-value {
+  max-width: 14ch;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.inbox-toolbar .container-filter > button.filter-state,
+.inbox-toolbar .container-filter > button.filter-state-small {
+  border-radius: 20px !important;
+}
+
+@media (max-width: 1300px) {
+  .filter-chip mat-select {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  .inbox-toolbar .container-filter > button .invisible-item {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    pointer-events: auto;
+  }
+
+  :host ::ng-deep .inbox-toolbar .container-filter > button .mat-mdc-select-trigger,
+  :host ::ng-deep .inbox-toolbar .container-filter > button .mat-select-trigger {
+    display: none !important;
+  }
+
+  .inbox-toolbar .container-filter > button.filter-state,
+  .inbox-toolbar .container-filter > button.filter-state-small {
+    width: auto !important;
+    padding: 4px 9px !important;
+    border-radius: 20px !important;
+  }
+}
+
+button[mat-icon-button] {
+  z-index: 3 !important;
+}
+
+.mat-select-panel {
+  max-height: 300px !important;
+}
+
+@mixin leave($bg-background, $accent, $divider, $text-main-solid, $text-side, $hover, $leave-pending, $leave-ok, $leave-not-ok, $leave-cancelled, $leave-bk-cancelled,$leave-draft, $leave-bk-draft) {
+  app-leave {
+    .inbox-toolbar {
+      background: $bg-background;
+    }
+    .mat-tab-body-wrapper {
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      transition: height 500ms cubic-bezier(0.35, 0, 0.25, 1);
+      height: 95% !important;
+    }
+    .leave_container {
+      background: $bg-background;
+
+      .leave_items {
+        .leave_items-item {
+          &.ok {
+            .content {
+              .leave_item-status_icon {
+                color: $leave-ok;
+              }
+            }
+          }
+
+          &.not-ok {
+            .content {
+              .leave_item-status_icon {
+                color: $leave-not-ok;
+              }
+            }
+          }
+
+          &.pending {
+            .content {
+              .leave_item-status_icon {
+                color: $leave-pending;
+              }
+            }
+          }
+
+          &.draft {
+            .content {
+              .leave_item-status_icon {
+                color: $text-side;
+              }
+            }
+          }
+
+          &.cancel {
+            .content {
+              .leave_item-status_icon {
+                color: $leave-cancelled;
+              }
+            }
+          }
+
+          .content {
+            &:hover {
+              background: $hover !important;
+            }
+
+            &.selected {
+              border-left: 6px solid $accent !important;
+
+              mat-icon {
+                color: $accent !important;
+              }
+
+              .item-data {
+                color: $text-main-solid !important;
+              }
+            }
+
+            .leave_item-icon {
+              color: $text-side;
+            }
+
+            .item-data {
+              color: $text-side;
+            }
+          }
+        }
+      }
+
+      .window-spinner {
+        background: $bg-background !important;
+      }
+    }
+  }
+  app-employee-leaves-view {
+    .inbox-toolbar {
+      background: $bg-background;
+    }
+    .mat-tab-body-wrapper {
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      transition: height 500ms cubic-bezier(0.35, 0, 0.25, 1);
+      height: 95% !important;
+    }
+    .leave_container {
+      background: $bg-background;
+
+      .leave_items {
+        .leave_items-item {
+          &.ok {
+            .content {
+              .leave_item-status_icon {
+                color: $leave-ok;
+              }
+            }
+          }
+
+          &.not-ok {
+            .content {
+              .leave_item-status_icon {
+                color: $leave-not-ok;
+              }
+            }
+          }
+
+          &.pending {
+            .content {
+              .leave_item-status_icon {
+                color: $leave-pending;
+              }
+            }
+          }
+
+          &.draft {
+            .content {
+              .leave_item-status_icon {
+                color: $text-side;
+              }
+            }
+          }
+
+          &.cancel {
+            .content {
+              .leave_item-status_icon {
+                color: $leave-cancelled;
+              }
+            }
+          }
+
+          .content {
+            &:hover {
+              background: $hover !important;
+            }
+
+            &.selected {
+              border-left: 6px solid $accent !important;
+
+              mat-icon {
+                color: $accent !important;
+              }
+
+              .item-data {
+                color: $text-main-solid !important;
+              }
+            }
+
+            .leave_item-icon {
+              color: $text-side;
+            }
+
+            .item-data {
+              color: $text-side;
+            }
+          }
+        }
+      }
+
+      .window-spinner {
+        background: $bg-background !important;
+      }
+    }
+  }
+}

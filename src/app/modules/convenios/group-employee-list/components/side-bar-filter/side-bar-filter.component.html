@@ -1,0 +1,138 @@
+<ng-container *transloco="let t; prefix: 'groupConfig'">
+  <div class="tw-w-96 tw-p-2" [formGroup]="form">
+    <div class="tw-flex tw-gap-3 tw-mt-2 tw-mb-4">
+      <mat-icon>settings</mat-icon>
+      <span class="tw-font-bold">{{ t('employeeList.sideBarFilter.title') }}</span>
+    </div>
+
+    <mat-tab-group>
+      <mat-tab class="tw-px-7" [label]="t('employeeList.sideBarFilter.tabs.employeeData')">
+        <div class="tw-flex tw-flex-col tw-pt-6">
+          <!-- Inputs -->
+          <div class="tw-flex tw-flex-col tw-gap-4">
+            <mat-form-field class="tw-w-full" subscriptSizing="dynamic">
+              <mat-icon matPrefix>search</mat-icon>
+              <input
+                matInput
+                formControlName="fiscalId"
+                [placeholder]="t('employeeList.sideBarFilter.fields.fiscalId')"
+              />
+            </mat-form-field>
+
+            <mat-form-field class="tw-w-full" subscriptSizing="dynamic">
+              <mat-icon matPrefix>search</mat-icon>
+              <input
+                matInput
+                formControlName="fileNumber"
+                [placeholder]="t('employeeList.sideBarFilter.fields.fileNumber')"
+              />
+            </mat-form-field>
+          </div>
+
+          <!-- Toggle sections -->
+          <div class="tw-flex tw-flex-col tw-mt-4 tw-ml-3">
+            <div class="tw-flex tw-flex-col tw-justify-between tw-py-4 tw-gap-4">
+              <div class="tw-flex tw-flex-col tw-mb-1">
+                <span class="tw-font-bold tw-leading-4">{{
+                  t('employeeList.sideBarFilter.fileStatus.title')
+                }}</span>
+                <span class="tw-text-xs dark:tw-text-gray-400">{{
+                  t('employeeList.sideBarFilter.fileStatus.subtitle')
+                }}</span>
+              </div>
+
+              <div>
+                <mat-slide-toggle
+                  class="tw-mr-4"
+                  color="accent"
+                  formControlName="fileStatusActive"
+                />
+                <span>{{ t('employeeList.sideBarFilter.fileStatus.active') }}</span>
+              </div>
+              <div>
+                <mat-slide-toggle
+                  class="tw-mr-4"
+                  color="accent"
+                  formControlName="fileStatusInactive"
+                />
+                <span>{{ t('employeeList.sideBarFilter.fileStatus.inactive') }}</span>
+              </div>
+            </div>
+
+            <div class="tw-flex tw-flex-col tw-justify-between tw-py-4 tw-gap-4">
+              <div class="tw-flex tw-flex-col tw-mb-1">
+                <span class="tw-font-bold tw-leading-4">{{
+                  t('employeeList.sideBarFilter.signCondition.title')
+                }}</span>
+                <span class="tw-text-xs dark:tw-text-gray-400">{{
+                  t('employeeList.sideBarFilter.signCondition.subtitle')
+                }}</span>
+              </div>
+
+              <div>
+                <mat-slide-toggle
+                  class="tw-mr-4"
+                  color="accent"
+                  formControlName="signConditionEnabled"
+                />
+                <span>{{ t('employeeList.sideBarFilter.signCondition.enabled') }}</span>
+              </div>
+              <div>
+                <mat-slide-toggle
+                  class="tw-mr-4"
+                  color="accent"
+                  formControlName="signConditionPending"
+                />
+                <span>{{ t('employeeList.sideBarFilter.signCondition.pending') }}</span>
+              </div>
+              <div>
+                <mat-slide-toggle
+                  class="tw-mr-4"
+                  color="accent"
+                  formControlName="signConditionDisabled"
+                />
+                <span>{{ t('employeeList.sideBarFilter.signCondition.disabled') }}</span>
+              </div>
+            </div>
+
+            <div class="tw-flex tw-flex-col tw-justify-between tw-py-4 tw-gap-4">
+              <div class="tw-flex tw-flex-col tw-mb-1">
+                <span class="tw-font-bold tw-leading-4">{{
+                  t('employeeList.sideBarFilter.humanageAccess.title')
+                }}</span>
+                <span class="tw-text-xs dark:tw-text-gray-400">{{
+                  t('employeeList.sideBarFilter.humanageAccess.subtitle')
+                }}</span>
+              </div>
+
+              <div>
+                <mat-slide-toggle
+                  class="tw-mr-4"
+                  color="accent"
+                  formControlName="humanageAccessAccessed"
+                />
+                <span>{{ t('employeeList.sideBarFilter.humanageAccess.accessed') }}</span>
+              </div>
+              <div>
+                <mat-slide-toggle
+                  class="tw-mr-4"
+                  color="accent"
+                  formControlName="humanageAccessNotAccessed"
+                />
+                <span>{{ t('employeeList.sideBarFilter.humanageAccess.notAccessed') }}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </mat-tab>
+    </mat-tab-group>
+    <div class="tw-flex tw-justify-end tw-gap-2 tw-mt-4">
+      <button matButton class="tw-font-bold" color="primary" (click)="onClose()">
+        {{ t('employeeList.sideBarFilter.close') }}
+      </button>
+      <button matButton="filled" color="primary" (click)="onSubmit()">
+        {{ t('employeeList.sideBarFilter.search') }}
+      </button>
+    </div>
+  </div>
+</ng-container>

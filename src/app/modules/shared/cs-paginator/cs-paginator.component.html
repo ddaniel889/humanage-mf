@@ -1,0 +1,24 @@
+<div class="tw-flex tw-flex-row tw-justify-between tw-items-center tw-gap-8">
+  @if (!hidePageSizeSelection) {
+    <mat-form-field>
+      <mat-select [(ngModel)]="pageSize" (selectionChange)="setSizePage()">
+        @for (pageSize of optionsPageSize; track pageSize) {
+          <mat-option [value]="pageSize">
+            {{ pageSize }}
+          </mat-option>
+        }
+      </mat-select>
+      <mat-hint>Resultados por página</mat-hint>
+    </mat-form-field>
+  }
+  <mat-paginator
+    class="tw-bg-transparent"
+    [showFirstLastButtons]="this.pageCount / this.pageSize < 1900"
+    [length]="pageCount"
+    [pageSize]="this.pageSize"
+    [hidePageSize]="hidePageSize"
+    [pageIndex]="zeroBasedPageIndex"
+    (page)="selectedPageChanged()"
+  >
+  </mat-paginator>
+</div>

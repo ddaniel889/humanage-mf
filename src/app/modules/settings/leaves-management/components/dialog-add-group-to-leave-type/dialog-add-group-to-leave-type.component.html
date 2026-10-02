@@ -1,0 +1,108 @@
+<ng-container *transloco="let t; prefix: 'leaves.dialogAddGroupToLeaveType'">
+  <div
+    class="tw-flex tw-flex-col tw-p-6 tw-rounded-[20px] tw-bg-gray-100 dark:tw-bg-[#505050] tw-border tw-border-stone-200 dark:tw-border-gray-600 tw-shadow-md tw-gap-4"
+  >
+    <div class="tw-flex tw-justify-between">
+      @if (hasNoGroups()) {
+        <h1 class="tw-font-bold tw-text-2xl dark:tw-text-white">
+          {{ t('emptyState.title') }}
+        </h1>
+      } @else {
+        <h1 class="tw-font-bold tw-text-2xl dark:tw-text-white">
+          {{ t('title', { leaveTypeName: data.leaveTypeNameKey | transloco }) }}
+        </h1>
+      }
+
+      <button (click)="onCloseClick()">
+        <i class="fa fa-times tw-size-6 tw-text-2xl dark:tw-text-white" aria-hidden="true"></i>
+      </button>
+    </div>
+
+    @if (status() === 'loading' || status() === 'reloading') {
+      <div class="tw-flex tw-justify-center tw-items-center tw-min-h-[200px]">
+        <mat-progress-spinner mode="indeterminate"></mat-progress-spinner>
+      </div>
+    } @else if (hasNoGroups()) {
+      <p class="tw-text-base tw-font-normal tw-leading-[19px] dark:tw-text-white">
+        {{ t('emptyState.description') }}
+      </p>
+
+      <div class="tw-flex tw-gap-3 tw-w-full">
+        <button
+          matButton="outlined"
+          color="primary"
+          class="hl-mat-button tw-w-1/2"
+          (click)="onCloseClick()"
+        >
+          {{ 'common.message-service.cancel' | transloco }}
+        </button>
+
+        <button
+          matButton="filled"
+          color="primary"
+          class="hl-mat-button tw-w-1/2"
+          (click)="onCreateGroupClick()"
+        >
+          {{ t('emptyState.createGroup') }}
+        </button>
+      </div>
+    } @else {
+      <div
+        class="tw-w-full"
+        [class]="isScrollable() ? 'tw-max-h-[400px] tw-overflow-y-auto' : ''"
+      >
+        <mat-radio-group class="tw-flex tw-flex-col tw-gap-2" [(ngModel)]="selected">
+          @for (group of groups(); track group.id) {
+            <mat-radio-button
+              class="tw-flex tw-p-4 tw-bg-white dark:tw-bg-neutral-700 tw-rounded-[10px]"
+              [value]="group"
+            >
+              <div class="tw-flex tw-justify-between tw-w-full tw-items-center">
+                <div>
+                  <span class="tw-font-semibold dark:tw-text-white">{{ group.name }}</span>
+                  <p class="tw-text-sm dark:tw-text-gray-300">{{ group.description }}</p>
+                </div>
+                <div class="tw-flex tw-flex-col tw-text-end">
+                  <div class="tw-flex tw-items-baseline tw-justify-end tw-gap-1">
+                    <span class="tw-font-bold tw-text-sm tw-text-primary">{{
+                      group.activeEmployees
+                    }}</span>
+                    <span class="tw-text-xs tw-font-light">{{ t('employees') }}</span>
+                  </div>
+                  @if (group.codeCct) {
+                    <span
+                      class="tw-font-semibold tw-text-xs tw-text-gray-600 dark:tw-text-gray-400"
+                    >
+                      {{ group.codeCct }}
+                    </span>
+                  }
+                </div>
+              </div>
+            </mat-radio-button>
+          }
+        </mat-radio-group>
+      </div>
+
+      <div class="tw-flex tw-gap-3 tw-w-full">
+        <button
+          matButton="outlined"
+          color="primary"
+          class="hl-mat-button tw-w-1/2"
+          (click)="onCloseClick()"
+        >
+          {{ 'common.message-service.cancel' | transloco }}
+        </button>
+
+        <button
+          matButton="filled"
+          color="primary"
+          class="hl-mat-button tw-w-1/2"
+          [disabled]="!selected"
+          (click)="onConfirmClick()"
+        >
+          {{ t('confirm') }}
+        </button>
+      </div>
+    }
+  </div>
+</ng-container>

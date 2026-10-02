@@ -1,0 +1,107 @@
+@use '@angular/material' as mf-mat;
+@use 'sass:map';
+@use 'sass:color';
+
+/**
+ * Deep Color get function
+ */
+@function colorDeepGet($map, $keys...) {
+  @each $key in $keys {
+    $map: map.get($map, $key);
+  }
+
+  @return $map;
+}
+
+/**
+ * Convert color to RGB channel values space-separated
+ */
+@function colorToRgbChannels($color) {
+  @return #{color.channel($color, 'red', $space: rgb)}
+    #{color.channel($color, 'green', $space: rgb)} #{color.channel($color, 'blue', $space: rgb)};
+}
+
+@mixin setMfColors(
+  $theme,
+  $colorPri,
+  $varPri,
+  $colorAccent,
+  $varAccent,
+  $colorWarn,
+  $varWarn,
+  $scheme
+) {
+  $color-config: mf-mat.m2-get-color-config($theme);
+  $primary: map.get($color-config, primary);
+  $accent: map.get($color-config, accent);
+  $warn: map.get($color-config, warn);
+
+  mf-hl-root,
+  .mf-hl-tailwind-scope {
+    $primary-color: mf-mat.m2-get-color-from-palette($primary, $varPri);
+    $contrast-primary-color: mf-mat.m2-get-contrast-color-from-palette($primary, $varPri);
+
+    --mf-ou-select-bg: #{$primary-color};
+    --mf-ou-select-text-color: #{$contrast-primary-color};
+
+    --mf-color-primary: #{$primary-color};
+    --mf-color-primary-rgb: #{colorToRgbChannels($primary-color)};
+
+    $page-bg: colorDeepGet($theme, 'background', 'card');
+    --mf-page-bg: #{$page-bg};
+    --mf-page-bg-rgb: #{colorToRgbChannels($page-bg)};
+
+    --mf-color-bg-primary: #{mf-mat.m2-get-color-from-palette(
+        $primary,
+        if($scheme == 'light', 100, 900)
+      )};
+
+    --mf-color-contrast-primary: #{$contrast-primary-color};
+
+    $accent-color: mf-mat.m2-get-color-from-palette($accent, $varAccent);
+    $contrast-accent-color: mf-mat.m2-get-contrast-color-from-palette($accent, $varAccent);
+    --mf-color-accent: #{$accent-color};
+    --mf-color-contrast-accent: #{$contrast-accent-color};
+
+    $warn-color: mf-mat.m2-get-color-from-palette($warn, $varWarn);
+    $contrast-warn-color: mf-mat.m2-get-contrast-color-from-palette($warn, $varWarn);
+    --mf-color-warn: #{$warn-color};
+    --mf-color-contrast-warn: #{$contrast-warn-color};
+
+    $text-color: colorDeepGet($theme, 'foreground', 'base');
+    --mf-text-default: #{$text-color};
+    --mf-text-default-rgb: #{colorToRgbChannels($text-color)};
+
+    --mf-bg-card-elevated: #{colorDeepGet($theme, 'background', 'background')};
+    --mf-divider: #{colorDeepGet($theme, 'foreground', 'divider')};
+    --mf-bg-background: #{colorDeepGet($theme, 'background', 'background')};
+
+    @if $scheme == light {
+      --mf-color-green: #cff0d8;
+      --mf-color-contrast-green: #1a7802;
+      --mf-color-red: #fde8e8;
+      --mf-color-contrast-red: #b00020;
+      --mf-color-blue: #e3f0fd;
+      --mf-color-contrast-blue: #1565c0;
+      --mf-color-brown: #f5e9e2;
+      --mf-color-contrast-brown: #6d3b2e;
+      --mf-color-orange: #fef3e2;
+      --mf-color-contrast-orange: #c25d00;
+      --mf-color-violet: #f0e8fd;
+      --mf-color-contrast-violet: #6a1b9a;
+    } @else {
+      --mf-color-green: #1b4d2b;
+      --mf-color-contrast-green: #8be98b;
+      --mf-color-red: #4d1a1a;
+      --mf-color-contrast-red: #ff8a8a;
+      --mf-color-blue: #1a2d4d;
+      --mf-color-contrast-blue: #82b1ff;
+      --mf-color-brown: #3d2318;
+      --mf-color-contrast-brown: #d4a48a;
+      --mf-color-orange: #4d2e00;
+      --mf-color-contrast-orange: #ffb74d;
+      --mf-color-violet: #2d1a4d;
+      --mf-color-contrast-violet: #ce93d8;
+    }
+  }
+}

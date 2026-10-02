@@ -1,0 +1,72 @@
+<ng-container *transloco="let t; prefix: 'groupConfig.dialogAssignGroup'">
+  <div
+    class="tw-flex tw-flex-col tw-p-6 tw-rounded-[20px] tw-bg-gray-100 dark:tw-bg-[#505050] tw-border tw-border-stone-200 dark:tw-border-gray-600 tw-shadow-md tw-gap-4"
+  >
+    <div class="tw-flex tw-justify-between">
+      <h1 class="tw-font-bold tw-text-2xl dark:tw-text-white">
+        {{ t('title', { count: data.selectedEmployees.length }) }}
+      </h1>
+      <button (click)="onCloseClick()">
+        <i class="fa fa-times tw-size-6 tw-text-2xl dark:tw-text-white" aria-hidden="true"></i>
+      </button>
+    </div>
+    <div>
+      @if (data.selectedEmployees.length > 1) {
+        <span class="tw-text-primary tw-font-bold tw-text-sm">{{
+          t('selectedEmployees', { count: data.selectedEmployees.length })
+        }}</span>
+      }
+      <div
+        class="tw-w-full tw-mt-2"
+        [class]="isScrollable() ? 'tw-max-h-[400px] tw-overflow-y-auto' : ''"
+      >
+        <mat-radio-group class="tw-flex tw-flex-col tw-gap-2" [(ngModel)]="selected">
+          @for (group of data.groups; track $index) {
+            <mat-radio-button
+              class="tw-flex tw-p-4 tw-bg-white dark:tw-bg-neutral-700 tw-rounded-[10px]"
+              [value]="group"
+            >
+              <div class="tw-flex tw-justify-between tw-w-full tw-items-center">
+                <div>
+                  <span class="tw-font-semibold dark:tw-text-white">{{ group.name }}</span>
+                  <p class="tw-text-sm dark:tw-text-gray-300">{{ group.description }}</p>
+                </div>
+                <div class="tw-flex tw-flex-col tw-text-end">
+                  <div>
+                    <span class="tw-font-bold tw-text-sm tw-text-primary">{{
+                      group.activeEmployees
+                    }}</span>
+                    <span class="tw-text-xs tw-font-light tw-ml-0.5">{{ t('employees') }}</span>
+                  </div>
+                  <span
+                    class="tw-font-semibold tw-text-xs tw-text-gray-600 dark:tw-text-gray-400"
+                    >{{ group.codeCct }}</span
+                  >
+                </div>
+              </div>
+            </mat-radio-button>
+          }
+        </mat-radio-group>
+      </div>
+    </div>
+    <div class="tw-flex tw-gap-3 tw-w-full">
+      <button
+        matButton="outlined"
+        color="primary"
+        class="hl-mat-button tw-w-1/2"
+        (click)="onCloseClick()"
+      >
+        {{ 'common.message-service.cancel' | transloco }}
+      </button>
+
+      <button
+        matButton="filled"
+        color="primary"
+        class="hl-mat-button tw-w-1/2"
+        (click)="onAssignClick()"
+      >
+        {{ t('assign') }}
+      </button>
+    </div>
+  </div>
+</ng-container>

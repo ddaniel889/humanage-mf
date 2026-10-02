@@ -1,0 +1,204 @@
+<div class="tw-flex tw-flex-col tw-p-6 tw-h-full dark:tw-bg-[#505050]">
+  <div class="tw-flex tw-justify-end tw-items-center tw-mb-8">
+    <button (click)="onCloseClick()">
+      <i class="fa fa-times tw-size-6 tw-text-2xl tw-text-primary" aria-hidden="true"></i>
+    </button>
+  </div>
+  <!-- pasos licencias -->
+  <mat-horizontal-stepper #stepper [hidden]="isLoading" class="tw-w-full tw-h-full">
+    <!-- paso 1 - tipo  -->
+    <mat-step>
+      <div class="tw-w-full tw-max-w-3xl tw-mx-auto">
+        <form [formGroup]="menuFormLeave" class="tw-flex tw-flex-col tw-h-full">
+          <h1 class="tw-font-bold tw-text-3xl tw-text-primary tw-text-[28px]">
+            Agregar licencia
+          </h1>
+          <hl-selection-button-list class="tw-mt-6" [items]="leaveTypeOptions" [name]="'license'" [title]="'Tipo de licencia'" (valueChange)="onLeaveTypeSelected($event)"></hl-selection-button-list>
+          
+          @if (menuFormLeave.controls['selectedMenuLeave'].value) {
+            <div class="tw-mt-6">
+              <h2 class="tw-font-semibold tw-text-lg tw-text-default">
+                ¿Cuántos dias vas a solicitar?
+              </h2>
+              <div class="tw-flex tw-gap-4 tw-mt-2 tw-items-start">
+                <mat-form-field class="tw-w-44" appearance="fill" subscriptSizing="dynamic">
+                  <mat-label>Cantidad de dias</mat-label>
+                  <input matInput [formControl]="daysControl" type="number" min="1" [max]="AvailableDays" (input)="onDaysInputChange()">
+                  @if (daysControl.hasError('max')) {
+                    <mat-error>Máximo {{ AvailableDays }} días</mat-error>
+                  } @else if (daysControl.hasError('min') || daysControl.hasError('required')) {
+                    <mat-error>Ingresá cantidad de días</mat-error>
+                  }
+                </mat-form-field>
+                <div>
+                  <div class="tw-flex tw-items-center tw-p-4 tw-rounded-[5px] tw-bg-[#FCFCFC] tw-border-[#D1D1D1] tw-border tw-text-sm tw-text-[#5F5F5F] dark:tw-text-default dark:tw-bg-[#404040] dark:tw-border-[#666666]">
+                    <i class="fa fa-question-circle tw-text-primary tw-mr-4 tw-text-xl" aria-hidden="true"></i>
+                    <span>Podras solicitar <span class="tw-font-semibold"> máximo {{ AvailableDays }} dias</span></span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="tw-mt-6">
+              <h2 class="tw-font-semibold tw-text-lg tw-text-default">
+                Fecha de la licencia
+              </h2>
+              <div class="tw-flex tw-gap-4 tw-mt-2">
+                <mat-form-field class="tw-min-w-44 tw-h-14" appearance="fill" subscriptSizing="dynamic">
+                  <mat-label>Fecha de inicio</mat-label>
+                  <input matInput [formControl]="startDate" [matDatepicker]="picker" [matDatepickerFilter]="dateFilter" [min]="MinDate" [max]="MaxDate" (dateChange)="onStartDateChange()" placeholder="Seleccioná una fecha">
+                  <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+                  <mat-datepicker #picker></mat-datepicker>
+                </mat-form-field>
+                <mat-form-field class="tw-min-w-44 tw-h-14" appearance="fill" subscriptSizing="dynamic">
+                  <mat-label>Fecha de fin</mat-label>
+                  <input matInput [formControl]="endDateDisplay" [matDatepicker]="endPicker">
+                  <mat-datepicker #endPicker></mat-datepicker>
+                </mat-form-field>
+                <div class="tw-flex tw-p-4 tw-max-w-lg tw-rounded-[5px] tw-bg-[#FCFCFC] tw-border-[#D1D1D1] tw-text-[#5F5F5F] dark:tw-text-default tw-border tw-text-sm dark:tw-bg-[#404040] dark:tw-border-[#666666]">
+                  <i class="fa fa-question-circle tw-text-primary tw-mr-4 tw-text-xl" aria-hidden="true"></i>
+                  <span>Indique el día de inicio de su licencia y se marcará automáticamente en el calendario</span>
+                </div>
+              </div>
+
+            </div>
+
+            <div class="tw-p-4 tw-rounded-[5px] tw-bg-[#FCFCFC] tw-border-[#D1D1D1] tw-text-[#5F5F5F] dark:tw-text-default tw-border tw-mt-6 tw-text-sm tw-w-max dark:tw-bg-[#404040] dark:tw-border-[#666666]">
+              <div class="tw-flex tw-items-center">
+                <i class="fa fa-question-circle tw-text-primary tw-mr-2 tw-text-xl" aria-hidden="true"></i>
+                <span class="tw-font-bold">A tener en cuenta</span>
+              </div>
+              @if (rules) {
+                <p class="tw-mt-1">
+                  Los dias de licencia se calcula en <span class="tw-font-semibold">{{ rules.useConsecutiveDays ? 'días corridos' : 'días hábiles' }}</span>.
+                </p>
+              }
+            </div>
+          }
+        </form>
+      </div>
+    </mat-step>
+
+    <!-- paso 2 - carga -->
+    <mat-step>
+      <div class="tw-w-full tw-max-w-3xl tw-mx-auto tw-flex tw-flex-col tw-gap-6">
+        <h1 class="tw-font-bold tw-text-3xl tw-text-primary tw-text-[28px]">
+          Revisa y confirma
+        </h1>
+
+        <div>
+          <div class="tw-text-sm tw-tracking-widest tw-uppercase tw-text-default">TIPO DE LICENCIA</div>
+          <div class="tw-flex tw-gap-2 tw-mt-1 tw-items-center">
+            <i class="fa-solid tw-text-primary tw-text-2xl" [class]="licenseIcon()"></i>
+            <span class="tw-font-semibold tw-text-lg tw-text-default">{{ licenseSelected()?.description }}</span>
+          </div>
+        </div>
+
+        <div>
+          <div class="tw-text-sm tw-tracking-widest tw-uppercase tw-text-default">FECHA DE TU AUSENCIA</div>
+          <div class="tw-flex tw-gap-2 tw-mt-1 tw-items-center">
+            <i class="fa-solid fa-calendar-days tw-text-primary tw-text-2xl"></i>
+            <div class="tw-flex tw-gap-2 tw-items-center">
+              <div class="tw-font-semibold tw-text-lg tw-text-default">{{ fechaInicio | date:'dd/MM/yyyy' }}</div>
+              <i class="fa-solid fa-arrow-right tw-text-primary tw-text-2xl"></i>
+              <div class="tw-font-semibold tw-text-lg tw-text-default">{{ fechaFin | date:'dd/MM/yyyy' }} <span class="tw-font-normal">({{ diasConsumidos }} días)</span></div>
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <div class="tw-text-sm tw-tracking-widest tw-uppercase tw-text-default">¿CUÁNDO VUELVO DEL TRABAJO?</div>
+          <div class="tw-flex tw-gap-2 tw-mt-1 tw-items-center">
+            <i class="fa-solid fa-calendar-days tw-text-primary tw-text-2xl"></i>
+            <span class="tw-font-semibold tw-text-lg tw-text-default">{{ fechaRegreso | date:'dd/MM/yyyy' }}</span>
+          </div>
+        </div>
+      </div>
+    </mat-step>
+
+    <!-- paso 3 - resumen -->
+    <mat-step>
+      <div class="tw-w-full tw-max-w-[1200px] tw-mx-auto tw-flex tw-flex-col tw-items-center tw-gap-24 tw-mt-16">
+        <div class="tw-flex tw-flex-col tw-items-center tw-gap-12">
+          <div class="tw-flex tw-flex-col tw-items-center tw-gap-6">
+              <div
+              class="tw-flex tw-items-center tw-justify-center tw-w-16 tw-h-16 tw-rounded-md"
+              [class]="iconClasses()"
+              >
+              <i class="fa tw-text-3xl" [class]="iconTipe()" aria-hidden="true"></i>
+            </div>
+            <div class="tw-flex tw-flex-col tw-items-center">
+              <h1 class="tw-font-bold tw-text-[40px] tw-text-primary">Solicitud enviada con éxito</h1>
+              <p class="tw-text-default tw-max-w-xl tw-text-center">Su solicitud será evaluada por administración. Podes ver el estado de tu solicitud desde el panel de licencias</p>
+            </div>
+          </div>
+          <div class="tw-flex tw-gap-3">
+            <button
+              matButton="outlined"
+              color="primary"
+              class="hl-mat-button"
+              (click)="onViewRequestClick()"
+            >
+              Ver solicitud
+            </button>
+            
+            <button
+              matButton="filled"
+              color="primary"
+              class="hl-mat-button"
+              (click)="onCloseClick()"
+            >
+              Ir al panel de licencias
+            </button>
+          </div>
+        </div>
+
+        <div class="tw-p-8 tw-flex tw-flex-col tw-gap-4 tw-items-center tw-max-w-6xl tw-bg-[#FCFCFC] tw-border-[#D1D1D1] tw-border tw-rounded-[5px] dark:tw-bg-[#404040] dark:tw-border-[#666666]">
+          <h2 class="tw-font-semibold tw-text-2xl tw-text-default">¿Ahora cómo seguimos?</h2>
+          <div class="tw-flex tw-gap-6 tw-items-start">
+            <div class="tw-flex tw-flex-col tw-gap-3">
+              <div class="tw-flex tw-items-center tw-mr-4">
+                <div class="tw-px-[13px] tw-py-[6px] tw-rounded-md tw-bg-primary/25 tw-font-extrabold tw-text-xl tw-text-primary">1</div>
+              </div>
+              <span class="tw-text-lg tw-font-medium tw-text-default">Su solicitud será evaluada por Recursos Humanos</span>
+            </div>
+            <div class="tw-flex tw-flex-col tw-gap-3">
+              <div class="tw-flex tw-items-center tw-mr-4">
+                <div class="tw-px-[13px] tw-py-[6px] tw-rounded-md tw-bg-primary/25 tw-font-extrabold tw-text-xl tw-text-primary">2</div>
+              </div>
+              <span class="tw-text-lg tw-font-medium tw-text-default">Seguí el estado de tu licencia desde el panel</span>
+            </div>
+            <div class="tw-flex tw-flex-col tw-gap-3">
+              <div class="tw-flex tw-items-center tw-mr-4">
+                <div class="tw-px-[13px] tw-py-[6px] tw-rounded-md tw-bg-primary/25 tw-font-extrabold tw-text-xl tw-text-primary">3</div>
+              </div>
+              <span class="tw-text-lg tw-font-medium tw-text-default">Adjunta la documentación obligatoria en el plazo indicado </span>
+            </div>
+            <div class="tw-flex tw-flex-col tw-gap-3">
+              <div class="tw-flex tw-items-center tw-mr-4">
+                <div class="tw-px-[13px] tw-py-[6px] tw-rounded-md tw-bg-primary/25 tw-font-extrabold tw-text-xl tw-text-primary">4</div>
+              </div>
+              <span class="tw-text-lg tw-font-medium tw-text-default">¡ Y listo! Su solicitud será aprobada</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </mat-step>
+  </mat-horizontal-stepper>
+
+  <!-- acciones fijas al fondo -->
+   @if(stepper.selectedIndex < 2){
+     <div class="tw-flex tw-justify-end tw-items-center tw-py-6 tw-px-8 tw-gap-3 tw-w-full tw-absolute tw-bottom-0 tw-right-0 tw-border-t tw-border-neutral-100 dark:tw-border-gray-600 dark:tw-bg-[#505050]">
+       @switch (stepper.selectedIndex) {
+         @case (0) {
+           <button data-testid="cancel-btn-main" matButton="outlined" color="primary" class="hl-mat-button" mat-dialog-close>Cancelar</button>
+           <button data-testid="next-btn-main" matButton="filled" color="primary" class="hl-mat-button" (click)="goToSummaryVacation()" [disabled]="isLoading || menuFormLeave.invalid || (menuFormLeave.controls['selectedMenuLeave'].value && (daysControl.invalid || !startDate.value))">Enviar solicitud</button>
+         }
+         @case (1) {
+          <button data-testid="back-btn-summary" matButton="outlined" color="primary" class="hl-mat-button" (click)="stepper.previous()">Anterior</button>
+          <button data-testid="next-btn-summary" matButton="filled" color="primary" class="hl-mat-button" (click)="sendFormData()">Confirmar y enviar</button>
+         }
+       }
+     </div>
+  }
+</div>

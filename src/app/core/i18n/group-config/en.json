@@ -1,0 +1,134 @@
+{
+  "groupConfig": {
+    "title": "Groups or Agreements Configuration",
+    "employeesWithoutGroupTooltip": "All employees who do not belong to a group will appear as without group",
+    "employeesWithoutGroupHeading": "Employees without group"
+  },
+  "groupDetails": {
+    "identifier": "Identifier",
+    "description": "Description",
+    "employees": "Employees",
+    "employeesListTitle": "Employees",
+    "editGroup": "Edit",
+    "deleteGroup": "Delete"
+  },
+  "employeeList": {
+    "employeesFound": "{count, plural, =0 {no employees found} one {1 employee found} other {# employees found}}",
+    "searchPlaceholder": "Search by name",
+    "filterEmployees": "Filter employees",
+    "assignToGroup": "Assign to a group",
+    "columns": {
+      "name": "Name",
+      "file": "File",
+      "fiscalId": "Fiscal ID",
+      "area": "Area",
+      "joinDate": "Join Date"
+    },
+    "actions": {
+      "openRowActions": "Open actions",
+      "assignToOtherGroup": "Assign to another group",
+      "removeFromGroup": "Remove from group"
+    },
+    "emptyState": {
+      "message": "No employees assigned yet!",
+      "description": "Here will appear the employees who belong to this group",
+      "filteredMessage": "No employees found",
+      "filteredDescription": "No employees matched your search criteria"
+    },
+    "sideBarFilter": {
+      "title": "Advanced Search",
+      "close": "Close",
+      "search": "Search",
+      "tabs": {
+        "employeeData": "Employee Data"
+      },
+      "fields": {
+        "fiscalId": "Fiscal ID",
+        "fileNumber": "File number"
+      },
+      "fileStatus": {
+        "title": "File Status",
+        "subtitle": "Search active only",
+        "active": "Active",
+        "inactive": "Inactive"
+      },
+      "signCondition": {
+        "title": "Signature Condition",
+        "subtitle": "Search all",
+        "enabled": "Enabled",
+        "pending": "Pending",
+        "disabled": "Disabled"
+      },
+      "humanageAccess": {
+        "title": "Humanage Access",
+        "subtitle": "Search all",
+        "accessed": "Accessed",
+        "notAccessed": "Not accessed"
+      }
+    }
+  },
+  "groupList": {
+    "title": "Groups",
+    "groupCreated": "{count, plural, =0 {no groups created} one {1 group created} other {# groups created}}",
+    "createGroup": "Create group",
+    "columns": {
+      "agreement": "Agreement",
+      "identifier": "Identifier",
+      "description": "Description",
+      "employees": "Employees",
+      "status": "Status"
+    },
+    "employeesSuffix": "employees",
+    "actions": {
+      "viewDetail": "View detail",
+      "editGroup": "Edit group"
+    },
+    "emptyState": {
+      "message": "No groups created yet!",
+      "description": "Your company's groups will appear here, please create a group to get started"
+    }
+  },
+  "dialogGroupForm": {
+    "createTitle": "Create group",
+    "editTitle": "Edit group",
+    "createSubmit": "Create",
+    "editSubmit": "Save",
+    "cancel": "Cancel",
+    "form": {
+      "name": {
+        "label": "Group name",
+        "placeholder": "E.g. Group A",
+        "required": "Name is required",
+        "maxlength": "Name cannot exceed 40 characters"
+      },
+      "description": {
+        "label": "Description",
+        "placeholder": "Group description",
+        "required": "Description is required",
+        "maxlength": "Description cannot exceed 60 characters"
+      },
+      "codeCct": {
+        "label": "Group identifier",
+        "placeholder": "E.g. 130/75",
+        "maxlength": "Identifier cannot exceed 20 characters"
+      }
+    },
+    "success": {
+      "createTitle": "New group created successfully",
+      "editTitle": "Group edited successfully",
+      "description": "You can edit and manage your groups from the \"Groups or agreements\" panel",
+      "confirmButton": "Go to the groups or agreements panel"
+    }
+  },
+  "dialogAssignGroup": {
+    "title": "{count, plural, one {Which group do you want to assign it to?} other {Which group do you want to assign them to?}}",
+    "selectedEmployees": "{count, plural, one {1 employee selected} other {# employees selected}}",
+    "employees": "employees",
+    "assign": "Assign",
+    "assignFailed": "{count, plural, one {1 employee could not be assigned} other {# employees could not be assigned}}"
+  },
+  "dialogAssignSuccess": {
+    "title": "{count, plural, one {Employee assigned successfully!} other {Employees assigned successfully!}}",
+    "description": "The selected employees now belong to the group \"{{ groupName }}\""
+  }
+}

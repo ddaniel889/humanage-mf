@@ -1,0 +1,44 @@
+{
+  "ou-select": {
+    "label": "Company"
+  },
+  "paginator": {
+    "items_per_page": "Items per page:",
+    "next_page": "Next page",
+    "previous_page": "Previous page",
+    "first_page": "First page",
+    "last_page": "Last page",
+    "of": "of"
+  },
+  "status": {
+    "active": "active",
+    "inactive": "inactive"
+  },
+  "message-service": {
+    "understood": "Understood",
+    "accept": "Accept",
+    "cancel": "Cancel",
+    "yes": "Yes",
+    "no": "No",
+    "ok": "Ok",
+    "send": "Send",
+    "apply": "Apply"
+  },
+  "loading": "Loading...",
+  "back": "Back",
+  "welcome": {
+    "welcomeMessageLbl": "Humanage welcomes you",
+    "welcomeMessageSubtitleLbl": "Say goodbye to paper, here you can manage everything digitally and in the easiest way"
+  },
+  "forms": {
+    "errors": {
+      "min": "Minimum value is {{ value }}",
+      "max": "Maximum value is {{ value }}",
+      "maxlength": "The maximum character limit is {{ value }}",
+      "minlength": "The minimum character limit is {{ value }}",
+      "minMax": "Must be greater than or equal to {{ min }}",
+      "exceedsMax": "Cannot exceed {{ max }}",
+      "required": "This field is required"
+    }
+  }
+}

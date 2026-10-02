@@ -1,0 +1,135 @@
+@use '@angular/material' as mat;
+
+:host {
+  @include mat.button-overrides(
+    (
+      outlined-container-shape: 40px,
+    )
+  );
+
+  line-height: normal;
+}
+
+.inbox-toolbar {
+  padding: 0 16px;
+  height: 64px;
+
+  .toolbar-line {
+    padding-left: 0 !important;
+  }
+}
+
+mat-divider.false-divider {
+  width: calc(100% - 32px) !important;
+  margin: -1px 16px 0 !important;
+}
+
+:host ::ng-deep .leave-tabs {
+  .mat-mdc-tab-header {
+    margin: 0 16px;
+  }
+  .mat-mdc-tab-body-wrapper {
+    flex-grow: 1;
+  }
+}
+
+
+::ng-deep {
+  .filter-select-panel {
+    margin-left: -46px;
+    margin-top: 2px;
+  }
+}
+.container-filter {
+  mat-icon {
+    min-width: 0;
+  }
+}
+
+.leave_container {
+  height: calc(100% - 64px);
+
+  .leave_items {
+    height: 100%;
+    padding: 16px 9px 16px 16px;
+    overflow: auto;
+    overflow-y: overlay;
+
+    .leave_items-item {
+      height: auto;
+      display: block;
+
+      .content {
+        padding: 16px;
+        height: 100%;
+        box-sizing: border-box;
+        cursor: pointer;
+        transition: all 0.28s cubic-bezier(0.4, 0, 0.2, 0.2) !important;
+
+        &.selected {
+          cursor: default !important;
+        }
+
+        .item-data {
+          margin-left: 16px;
+          width: calc(100% - 40px - 16px);
+
+          b {
+            font-size: 18px;
+          }
+
+          span {
+            font-size: 14px;
+          }
+        }
+      }
+    }
+  }
+
+  .main-action {
+    padding: 0 16px 16px;
+
+    .main-btn {
+      height: 64px;
+      width: 100%;
+      border-radius: 32px;
+
+      .mat-button-wrapper {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 20px;
+        padding-right: 8px;
+
+        mat-icon.mat-icon {
+          min-width: 40px;
+          margin-right: 8px;
+        }
+      }
+    }
+  }
+}
+
+@media (max-width: 1300px) {
+  .container-filter {
+    .mdc-button--outlined {
+      position: relative;
+      height: 40px !important;
+      min-width: 40px !important;
+      width: 40px !important;
+
+      mat-icon {
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+        margin: 0;
+        width: auto;
+        height: 0;
+      }
+      mat-select {
+        visibility: hidden;
+      }
+    }
+  }
+}

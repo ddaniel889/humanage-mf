@@ -1,0 +1,156 @@
+<ng-container *transloco="let t; prefix: 'groupConfig.groupList'">
+  <div id="header" class="tw-flex tw-justify-between tw-mb-4">
+    <div class="tw-flex tw-min-w-32 tw-justify-between">
+      <div class="tw-flex tw-flex-col tw-gap-0">
+        <h1 class="tw-text-xl tw-font-semibold">{{ t('title') }}</h1>
+        <span class="tw-text-xs tw-font-bold tw-text-primary">
+          {{ t('groupCreated', { count: dataSource().data.length }) }}</span
+        >
+      </div>
+      <div>
+        <button (click)="reloadGroups()" [class.fa-spin]="isLoading()">
+          <i class="fa fa-refresh tw-text-primary tw-size-5 tw-text-xl" aria-hidden="true"></i>
+        </button>
+      </div>
+    </div>
+    <div>
+      <button
+        matButton="filled"
+        color="primary"
+        class="hl-mat-button"
+        (click)="openCreateGroupDialog()"
+      >
+        <i class="fa fa-plus" aria-hidden="true"></i>
+        <span class="tw-ml-2 tw-font-semibold">{{ t('createGroup') }}</span>
+      </button>
+    </div>
+  </div>
+
+  @if (!isLoading()) {
+    @if (dataSource().data.length > 0) {
+      <div class="hl-table tw-overflow-hidden">
+        <table mat-table [dataSource]="dataSource()">
+          <ng-container matColumnDef="group">
+            <th mat-header-cell *matHeaderCellDef>
+              {{ t('columns.agreement') }}
+            </th>
+            <td mat-cell *matCellDef="let element">
+              <span class="tw-font-medium">{{ element.name }}</span>
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="id">
+            <th mat-header-cell *matHeaderCellDef>
+              {{ t('columns.identifier') }}
+            </th>
+            <td mat-cell *matCellDef="let element">
+              <span class="tw-font-medium">{{ element.codeCct || '-' }}</span>
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="description">
+            <th mat-header-cell *matHeaderCellDef>
+              {{ t('columns.description') }}
+            </th>
+            <td mat-cell *matCellDef="let element">
+              <span class="tw-font-medium">{{ element.description || '-' }}</span>
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="employees">
+            <th mat-header-cell *matHeaderCellDef>
+              {{ t('columns.employees') }}
+            </th>
+            <td mat-cell *matCellDef="let element">
+              <div class="tw-flex tw-items-center tw-gap-1">
+                <span class="tw-font-medium">{{
+                  element.activeEmployees ? element.activeEmployees : 0
+                }}</span>
+                <span class="tw-text-xs tw-font-light"> {{ t('employeesSuffix') }}</span>
+              </div>
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="status">
+            <th mat-header-cell *matHeaderCellDef>
+              {{ t('columns.status') }}
+            </th>
+            <td mat-cell *matCellDef="let element">
+              @let textKey = element.enabled ? 'common.status.active' : 'common.status.inactive';
+              @let color = element.enabled ? 'green' : 'red';
+              <hl-info-chip [text]="textKey | transloco" [color]="color" />
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="actions">
+            <th mat-header-cell *matHeaderCellDef class="hl-actions-cell"></th>
+            <td mat-cell *matCellDef="let element" class="hl-actions-cell">
+              <div class="tw-flex tw-justify-end">
+                <button
+                  mat-icon-button
+                  color="primary"
+                  class="hl-action-btn"
+                  [matMenuTriggerFor]="groupRowMenu"
+                  [matMenuTriggerData]="{ element: element }"
+                >
+                  <i class="fa fa-ellipsis-v" aria-hidden="true"></i>
+                </button>
+              </div>
+            </td>
+          </ng-container>
+
+          <tr
+            mat-header-row
+            *matHeaderRowDef="displayedColumns"
+            class="tw-bg-gray-100 tw-h-auto"
+          ></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumns" class="tw-h-auto"></tr>
+        </table>
+
+        <mat-menu #groupRowMenu="matMenu">
+          <ng-template matMenuContent let-element="element">
+            <button mat-menu-item (click)="viewDetail(element)">
+              <i
+                class="fa fa-eye tw-text-primary tw-w-6 tw-text-center tw-mr-2"
+                aria-hidden="true"
+              ></i>
+              <span>{{ t('actions.viewDetail') }}</span>
+            </button>
+            <button mat-menu-item (click)="openEditGroupDialog(element)">
+              <i
+                class="fa fa-pencil tw-text-primary tw-w-6 tw-text-center tw-mr-2"
+                aria-hidden="true"
+              ></i>
+              <span>{{ t('actions.editGroup') }}</span>
+            </button>
+          </ng-template>
+        </mat-menu>
+
+        @if (groups().totalCount > 5) {
+          <mat-paginator
+            [length]="groups().totalCount ?? 0"
+            [pageSize]="pageSize()"
+            [pageIndex]="groups().currentPage - 1"
+            [pageSizeOptions]="[5, 10, 20]"
+            showFirstLastButtons
+            (page)="onPageChange($event)"
+          >
+          </mat-paginator>
+        }
+      </div>
+    } @else {
+      <hl-empty-state [message]="t('emptyState.message')" [description]="t('emptyState.description')" iconName="people" />
+    }
+  }
+
+  @if (isLoading()) {
+    <div class="tw-flex tw-flex-col tw-items-center tw-py-6 tw-px-8 tw-gap-2">
+      <div class="tw-flex tw-flex-col tw-items-center tw-gap-2 tw-py-8">
+        <mat-progress-spinner mode="indeterminate" color="primary"> </mat-progress-spinner>
+        <span class="tw-text-gray-700 dark:tw-text-gray-300">{{
+          'common.loading' | transloco
+        }}</span>
+      </div>
+    </div>
+  }
+</ng-container>
